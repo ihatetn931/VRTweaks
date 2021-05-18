@@ -52,7 +52,7 @@
 	<HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\PlatformInputDefault.dll</HintPath>
     </Reference>
     <Reference Include="QModInstaller">
-      <HintPath>H:\Steam Games SSD\steamapps\common\SubnauticaZero\BepInEx\plugins\QModManager\QModInstaller.dll</HintPath>
+      <HintPath>$(CommonDir)SubnauticaZero\BepInEx\plugins\QModManager\QModInstaller.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,7 +63,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>H:\Steam Games SSD\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.dll</HintPath>
@@ -71,7 +71,7 @@
     </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>H:\Steam Games SSD\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
@@ -124,6 +124,7 @@
     <Compile Include="RecenterVRButtonAdder.cs" />
     <Compile Include="VRLoadingScreen.cs" />
     <Compile Include="WBOITFixes.cs" />
+	<Compile Include="Controls\XRInputManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mod.json">
