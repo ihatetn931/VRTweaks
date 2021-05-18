@@ -37,7 +37,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\publicized_assemblies\Assembly-CSharp-firstpass_publicized.dll</HintPath>
+      <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -125,7 +125,6 @@
     <Compile Include="RecenterVRButtonAdder.cs" />
     <Compile Include="VRLoadingScreen.cs" />
     <Compile Include="WBOITFixes.cs" />
-    <Compile Include="Controls\XRInputManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mod.json">
