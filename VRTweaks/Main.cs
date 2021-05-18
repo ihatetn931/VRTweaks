@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 namespace VRTweaks
 {
+
     [QModCore]
     public static class Loader
     {
