@@ -13,13 +13,17 @@ using System.Collections.Generic;
 
 namespace VRTweaks
 {
-
     [QModCore]
     public static class Loader
     {
         [QModPatch]
         public static void Initialize()
         {
+            //I guess if they don't want to play in vr they don't have to.
+            if(!XRSettings.enabled)
+            {
+                return;
+            }
             File.AppendAllText("VRTweaksLog.txt", "Initializing" + Environment.NewLine);
 
             new GameObject("_VRTweaks").AddComponent<VRTweaks>();
@@ -33,6 +37,8 @@ namespace VRTweaks
 
     public class VRTweaks : MonoBehaviour
     {
+        //private static VRTweaks s_instance;
+
         public VRTweaks()
         {
             DontDestroyOnLoad(gameObject);
