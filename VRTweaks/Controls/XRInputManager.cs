@@ -162,7 +162,6 @@ namespace VRTweaks
 
                 bool GetUseOculusInputManager = (bool)Traverse.Create(___instance).Method("GetUseOculusInputManager").GetValue();
                 GameInput.ControllerLayout GetControllerLayout = (GameInput.ControllerLayout)Traverse.Create(___instance).Method("GetControllerLayout").GetValue();
-                bool test = false;
                 XRInputManager xrInput = GetXRInputManager();
                 /*if (!xrInput.hasControllers())
                 {
@@ -255,7 +254,7 @@ namespace VRTweaks
                             axisValues[7] = Input.GetAxis("ControllerAxis8");
                         }
                     }
-                    if (xrInput.hasControllers() && test)
+                    if (xrInput.hasControllers())
                     {
                         if (XRSettings.loadedDeviceName == "Oculus")
                         {
@@ -287,7 +286,7 @@ namespace VRTweaks
                             }
                         }
                         //OpenVR Asix values
-                      /*  else if (XRSettings.loadedDeviceName == "OpenVR")
+                        /*if (XRSettings.loadedDeviceName == "OpenVR")
                         {
                             Vector2 vector = xrInput.Get(Controller.Left, CommonUsages.primary2DAxis);
                             axisValues[2] = vector.x;
