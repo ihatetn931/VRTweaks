@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace VRTweaks
 {
