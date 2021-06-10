@@ -110,6 +110,12 @@
     <Compile Include="BubblesSubtitleFixer.cs" />
     <Compile Include="CameraPositionFixes.cs" />
     <Compile Include="Controls\XRInputManager.cs" />
+    <Compile Include="GamepadGazeCursorFixer\BuilderMenu.cs" />
+    <Compile Include="GamepadGazeCursorFixer\CraftingMenu.cs" />
+    <Compile Include="GamepadGazeCursorFixer\Utilities\KeyboardInputSpoofer.cs" />
+    <Compile Include="GamepadGazeCursorFixer\PauseMenu.cs" />
+    <Compile Include="GamepadGazeCursorFixer\PDAMenu.cs" />
+    <Compile Include="GamepadGazeCursorFixer\Utilities\RaycastFixer.cs" />
     <Compile Include="GazeLayerFix.cs" />
     <Compile Include="MiscVrOptions.cs" />
     <Compile Include="PDAPositioning.cs" />
