@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-
+using UnityEngine.XR;
 
 namespace VRTweaks
 {
@@ -12,6 +12,7 @@ namespace VRTweaks
         {
             //Place the bubbles right at about neck level but does not rotate with view
             __instance.anchor.position = new Vector3(0.0f, 1.6f, 0.0f);
+            __instance.anchor.parent = Camera.main.transform;
             return true;
         }
     }
@@ -22,8 +23,9 @@ namespace VRTweaks
         [HarmonyPostfix]
         public static void Postfix(Subtitles __instance)
         {
-            __instance.transform.parent.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-            __instance.transform.parent.localPosition = new Vector3(-237.6f, +225.0f, 0.0f);
+            float guiScale = MiscSettings.GetUIScale();
+            __instance.transform.parent.localScale = new Vector3 (guiScale,guiScale,guiScale);
+            __instance.transform.parent.localPosition = new Vector3(-430.0f, +225.0f, 0.0f);
         }
     }
 }
