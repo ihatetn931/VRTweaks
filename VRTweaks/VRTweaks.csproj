@@ -121,14 +121,37 @@
     <Compile Include="AudioFixes.cs" />
     <Compile Include="BubblesSubtitleFixer.cs" />
     <Compile Include="CameraPositionFixes.cs" />
-    <Compile Include="Controls\BuilderToolMotion.cs" />
-    <Compile Include="Controls\Cursor.cs" />
-    <Compile Include="Controls\ExoSuitMotionPatch.cs" />
+    <Compile Include="Controls\BasePieces\BasePatches.cs" />
+    <Compile Include="Controls\BasePieces\BaseCell.cs" />
+    <Compile Include="Controls\BasePieces\BaseFace.cs" />
+    <Compile Include="Controls\BasePieces\BulkHead.cs" />
+    <Compile Include="Controls\BasePieces\Connector.cs" />
+    <Compile Include="Controls\BasePieces\ControlRoom.cs" />
+    <Compile Include="Controls\BasePieces\Corridor.cs" />
+    <Compile Include="Controls\BasePieces\FilterMachine.cs" />
+    <Compile Include="Controls\BasePieces\Foundation.cs" />
+    <Compile Include="Controls\BasePieces\Ladder.cs" />
+    <Compile Include="Controls\BasePieces\MapRoomcs.cs" />
+    <Compile Include="Controls\BasePieces\Modules.cs" />
+    <Compile Include="Controls\BasePieces\PartitionDoor.cs" />
+    <Compile Include="Controls\BasePieces\Partiton.cs" />
+    <Compile Include="Controls\BasePieces\Pipe.cs" />
+    <Compile Include="Controls\BasePieces\Spotlight.cs" />
+    <Compile Include="Controls\BasePieces\Waterpark.cs" />
+    <Compile Include="Controls\LaserPointer.cs" />
+    <Compile Include="Controls\Tools\BuilderPatches.cs" />
+    <Compile Include="Controls\UpdateHands.cs" />
+    <Compile Include="Controls\Vehicles\ExoSuitMotionPatch.cs" />
     <Compile Include="Controls\ExpMenu.cs" />
-    <Compile Include="Controls\KnifeDamagePatch.cs" />
-    <Compile Include="Controls\LaserInput.cs" />
+    <Compile Include="Controls\Tools\Cannon.cs" />
+    <Compile Include="Controls\Tools\ToolPlace.cs" />
+    <Compile Include="Controls\Tools\WelderPatch.cs" />
+    <Compile Include="Controls\TraceFpsTarget.cs" />
+    <Compile Include="Controls\UI\HandGUI.cs" />
+    <Compile Include="Controls\Tools\KnifeDamagePatch.cs" />
     <Compile Include="Controls\MainCameraControlPatch.cs" />
-    <Compile Include="Controls\MotionControlPatch.cs" />
+    <Compile Include="Controls\UI\FPSInput.cs" />
+    <Compile Include="Controls\Vehicles\ExosuitPatches.cs" />
     <Compile Include="Controls\VRHandsController.cs" />
     <Compile Include="Controls\XRInputManager.cs" />
     <Compile Include="GamepadGazeCursorFixer\BuilderMenu.cs" />
@@ -159,6 +182,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)bin\Debug\VRTweaks.dll" "$(CommonDir)SubnauticaZero\QMods\VRTweaks"</PostBuildEvent>

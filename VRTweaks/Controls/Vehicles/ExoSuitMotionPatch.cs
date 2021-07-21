@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace VRTweaks.Controls
+namespace VRTweaks.Controls.Vehicles
 {
 	/*class ExoSuitMotionPatch
 	{

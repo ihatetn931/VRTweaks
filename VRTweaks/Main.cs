@@ -30,7 +30,7 @@ namespace VRTweaks
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "VRTweaks");
 
             SnapTurningMenu.Patch();
-
+            
             File.AppendAllText("VRTweaksLog.txt", "Done Initializing" + Environment.NewLine);
         }
     }
@@ -61,7 +61,7 @@ namespace VRTweaks
             Recenter();
             yield break;
         }
-
+        
         internal void Update()
         {
             if (Input.GetKeyDown(KeyCode.T))

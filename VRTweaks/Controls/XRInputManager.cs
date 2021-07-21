@@ -5,7 +5,7 @@ using HarmonyLib;
 using System;
 using Platform.Utils;
 
-namespace VRTweaks
+namespace VRTweaks.Controls
 {
     enum Controller
     {
