@@ -63,7 +63,7 @@ namespace VRTweaks.Controls
             if (MotionControlConfig.ToggleDebugControllerBoxes)
             {
                 Time.fixedDeltaTime = (Time.timeScale / XRDevice.refreshRate);
-                //  var update = controller.gameObject.AddComponent<UpdateHand>();
+                //var update = controller.gameObject.AddComponent<UpdateHand>();
                 //ErrorMessage.AddDebug("UpdateHand: " + update);
                 Material newMaterial = new Material(Shader.Find("Sprites/Default"));
                 rightController = new GameObject("rightController");
