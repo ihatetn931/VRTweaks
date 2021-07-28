@@ -1,72 +1,164 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using VRTweaks.Controls.UI;
 
 namespace VRTweaks.Controls
 {
-    class LaserPointer : MonoBehaviour
+    public class LaserPointer : MonoBehaviour
     {
-		public static float hitDistance;
-		public static LineRenderer DrawLine(Vector3 start, Vector3 end)
-		{
-			GameObject myLine = new GameObject();
-			myLine.transform.position = start;
-			myLine.AddComponent<LineRenderer>();
-			LineRenderer lr = myLine.GetComponent<LineRenderer>();
-			///ConstructableBase componentInParent = Builder.ghostModel.GetComponentInParent<ConstructableBase>();
-			lr.material = new Material(Shader.Find("Sprites/Default"));
-			lr.startColor = Color.cyan;
-			lr.endColor = Color.blue;
-			lr.startWidth = 0.01f;
-			lr.endWidth = 0.02f;
-			//lr.SetPosition(0, start);
-			//lr.SetPosition(1, end * 10);
-			myLine.transform.SetParent(VRHandsController.rightController.transform);
-			GameObject.Destroy(myLine, 0.01f);
-			return lr;
-		}
+        public enum AxisType
+        {
+            XAxis,
+            ZAxis
+        }
 
-		public static void UpdatePointer(LineRenderer line)
-		{
-			Vector3 endPosition = GetEnd();
+        public Color color;
+        public static float thickness = 0.005f;
+        public AxisType facingAxis = AxisType.XAxis;
+        public float length = 2.9f;
+        public bool showCursor = true;
+        GameObject holder;
+        GameObject pointer;
+        public GameObject cursor;
+        public GameObject UIcursor;
+        public uGUI_InputGroup lastGroup { get; private set; }
+        public static RaycastHit hitObject;
+        Vector3 cursorScale = new Vector3(0.02f, 0.02f, 0.02f);
+        float contactDistance = 0f;
+        Transform contactTarget = null;
 
-			UpdateLength(line, endPosition);
-		}
+        void SetPointerTransform(float setLength, float setThicknes, Vector3 hitPoint)
+        {
+            //if the additional decimal isn't added then the beam position glitches
+            float beamPosition = setLength / (2 + 0.00001f);
 
-		public static void UpdateLength(LineRenderer lineRenderer, Vector3 endPosition)
-		{
-			lineRenderer.SetPosition(0, VRHandsController.rightController.transform.position);
-			lineRenderer.SetPosition(1, endPosition);
-		}
+            if (facingAxis == AxisType.XAxis)
+            {
+                pointer.transform.localScale = new Vector3(setLength, setThicknes, setThicknes);
+                pointer.transform.localPosition = new Vector3(beamPosition, 0f, 0f);
+                if (showCursor)
+                {
+                    cursor.transform.localPosition = new Vector3(setLength - cursor.transform.localScale.x, 0f, 0f);
+                    if (FPSInput.fpsRaycastResult.isValid)
+                    {
+                        if(!UIcursor.activeSelf)
+                            UIcursor.SetActive(true);
+                        UIcursor.transform.localPosition = FPSInput.fpsRaycastResult.worldPosition;
+                        UIcursor.GetComponent<MeshRenderer>().material.color = Color.green;
+                    }
+                    else
+                    {
+                        UIcursor.SetActive(false);
+                        UIcursor.GetComponent<MeshRenderer>().material.color = Color.black;
+                    }
+                }
+            }
+            else
+            {
+                pointer.transform.localScale = new Vector3(setThicknes, setThicknes, setLength);
+                pointer.transform.localPosition = new Vector3(0f, 0f, beamPosition);
 
-		public static Vector3 GetEnd()
-		{
-			//float distance = hitDistance;
-			float distance = GetDistance();
-			ConstructableBase componentInParent = Builder.ghostModel.GetComponentInParent<ConstructableBase>();
-			Vector3 endPosition = CalculateEnd(componentInParent.placeMaxDistance);
+                if (showCursor)
+                {
+                    cursor.transform.localPosition = new Vector3(0f, 0f, setLength - cursor.transform.localScale.z);
+                }
+            }
+        }
 
-			if (distance != 0.0f)
-				endPosition = CalculateEnd(hitDistance);
-			return endPosition;
-		}
+        // Use this for initialization
+        void Start()
+        {
+            Color colorRed = new Color(1, 0, 0, 1f);
+            Material newMaterial = new Material(Shader.Find("Sprites/Default"));
+            newMaterial.SetColor(ShaderPropertyID._Color, colorRed);
 
-		public static Vector3 CalculateEnd(float length)
-		{
-			return VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * length;
-		}
+            holder = new GameObject();
+            holder.transform.parent = this.transform;
+            holder.transform.localPosition = Vector3.zero;
 
-		public static float GetDistance()
-		{
-			RaycastHit hitObject;
-			ConstructableBase componentInParent = Builder.ghostModel.GetComponentInParent<ConstructableBase>();
-			Ray raycast = new Ray(VRHandsController.rightController.transform.position, VRHandsController.rightController.transform.right);
-			bool rayHit = Physics.Raycast(raycast, out hitObject, Builder.placeMaxDistance);
-			hitDistance = hitObject.distance;
-			//PointerEventData _pointerEventData = new PointerEventData(EventSystem.current);
-			//HandTargetEventData handTarget = new HandTargetEventData(EventSystem.current);
+            pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pointer.transform.parent = holder.transform;
+            pointer.GetComponent<MeshRenderer>().material = newMaterial;
 
-			//PointerEnter(hitObject, _pointerEventData, handTarget);
+            pointer.GetComponent<BoxCollider>().isTrigger = true;
+            pointer.AddComponent<Rigidbody>().isKinematic = true;
+            pointer.layer = 2;
 
-			return Builder.placeMaxDistance;
-		}
-	}
+            if (showCursor)
+            {
+                cursor = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                cursor.SetActive(true);
+                cursor.transform.parent = holder.transform;
+                cursor.GetComponent<MeshRenderer>().material = newMaterial;
+                cursor.transform.localScale = cursorScale;
+
+                cursor.GetComponent<SphereCollider>().isTrigger = true;
+                cursor.AddComponent<Rigidbody>().isKinematic = true;
+
+                cursor.layer = 2;
+
+                UIcursor = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                UIcursor.SetActive(true);
+                UIcursor.transform.parent = holder.transform;
+                UIcursor.GetComponent<MeshRenderer>().material = newMaterial;
+                UIcursor.transform.localScale = cursorScale;
+
+                UIcursor.GetComponent<SphereCollider>().isTrigger = true;
+                UIcursor.AddComponent<Rigidbody>().isKinematic = true;
+
+                UIcursor.layer = LayerID.Trigger;
+            }
+
+            SetPointerTransform(length, thickness, Vector3.right);
+        }
+        float GetBeamLength(bool bHit, RaycastHit hit)
+        {
+            float actualLength = length;
+
+            //reset if beam not hitting or hitting new target
+            if (!bHit || (contactTarget && contactTarget != hit.transform))
+            {
+                contactDistance = 0f;
+                contactTarget = null;
+            }
+
+            //check if beam has hit a new target
+            if (bHit)
+            {
+                if (hit.distance <= 0)
+                {
+                    cursor.GetComponent<MeshRenderer>().material.color = Color.red;
+                }
+                cursor.GetComponent<MeshRenderer>().material.color = Color.blue;
+                contactDistance = hit.distance;
+                contactTarget = hit.transform;
+            }
+
+            //adjust beam length if something is blocking it
+            if (bHit && contactDistance < length)
+            {
+                actualLength = contactDistance;
+            }
+
+            if (actualLength <= 0)
+            {
+                actualLength = length;
+            }
+
+            return actualLength;
+        }
+
+        void FixedUpdate()
+        {
+            Ray raycast = new Ray(transform.position, transform.right);
+            bool rayHit = Physics.Raycast(raycast, out hitObject);
+            if (rayHit)
+            {
+                float beamLength = GetBeamLength(rayHit, hitObject);
+                SetPointerTransform(beamLength, thickness, hitObject.point);
+            }
+        }
+    }
 }

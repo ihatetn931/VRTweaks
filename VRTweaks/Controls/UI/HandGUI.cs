@@ -1,6 +1,7 @@
 ﻿
 using HarmonyLib;
 using UnityEngine;
+using UWE;
 
 namespace VRTweaks.Controls.UI
 {
@@ -285,6 +286,99 @@ namespace VRTweaks.Controls.UI
 				__result = VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * __instance.activeHitDistance;
 				return false;
             }
+		}
+
+		[HarmonyPatch(typeof(GUIHand), nameof(GUIHand.GetFacingInSub))]
+		public static class GUIHand_GetFacingInSub__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(ref Facing __result, GUIHand __instance)
+			{
+				Vector3 vector = __instance.player.GetCurrentSub().transform.InverseTransformDirection(__instance.player.transform.right);
+				float x = vector.x;
+				float z = vector.z;
+				if (Mathf.Abs(x) > Mathf.Abs(z))
+				{
+					if (x <= 0f)
+					{
+						__result = Facing.West;
+					}
+					__result = Facing.East;
+				}
+				else
+				{
+					if (z <= 0f)
+					{
+						__result = Facing.South;
+					}
+					__result = Facing.North;
+				}
+				return false;
+			}
+
+		}
+
+		[HarmonyPatch(typeof(GUIHand), nameof(GUIHand.UpdateActiveTarget))]
+		public static class GUIHand_UpdateActiveTarget__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(GUIHand __instance)
+			{
+				PlayerTool tool = __instance.GetTool();
+				if (tool != null && tool.GetComponent<PropulsionCannon>() != null && tool.GetComponent<PropulsionCannon>().IsGrabbingObject())
+				{
+					__instance.activeTarget = tool.GetComponent<PropulsionCannon>().GetNearbyGrabbedObject();
+					__instance.suppressTooltip = true;
+					return false;
+				}
+				if (tool != null && tool.DoesOverrideHand())
+				{
+					__instance.activeTarget = null;
+					__instance.activeHitDistance = 0f;
+					return false;
+				}
+				DebugTargetConsoleCommand.RecordNext();
+				if (Target.GetAllTarget(Player.main.gameObject, 2f, out __instance.activeTarget, out __instance.activeHitDistance))
+				{
+					IHandTarget handTarget = null;
+					Transform transform = __instance.activeTarget.transform;
+					while (transform != null)
+					{
+						handTarget = transform.GetComponent<IHandTarget>();
+						if (handTarget != null)
+						{
+							__instance.activeTarget = transform.gameObject;
+							break;
+						}
+						transform = transform.parent;
+					}
+					if (handTarget == null)
+					{
+						HarvestType harvestType = TechData.GetHarvestType(CraftData.GetTechType(__instance.activeTarget));
+						if (harvestType == HarvestType.Pick)
+						{
+							if (global::Utils.FindAncestorWithComponent<Pickupable>(__instance.activeTarget) == null)
+							{
+								LargeWorldEntity largeWorldEntity = global::Utils.FindAncestorWithComponent<LargeWorldEntity>(__instance.activeTarget);
+								largeWorldEntity.gameObject.AddComponent<Pickupable>();
+								largeWorldEntity.gameObject.AddComponent<WorldForces>().useRigidbody = largeWorldEntity.GetComponent<Rigidbody>();
+								return false;
+							}
+						}
+						else if (harvestType == HarvestType.None)
+						{
+							__instance.activeTarget = null;
+							return false;
+						}
+					}
+				}
+				else
+				{
+					__instance.activeTarget = null;
+					__instance.activeHitDistance = 0f;
+				}
+				return false;
+			}
 
 		}
 	}

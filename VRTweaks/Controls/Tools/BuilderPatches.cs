@@ -70,6 +70,7 @@ namespace VRTweaks.Controls.Tools
 			static bool Prefix(ref Transform __result)
 			{
 				//VRHandsController.rightController.transform.rotation = MainCamera.camera.transform.rotation;
+				
 				__result = VRHandsController.rightController.transform;
 				return false;
 			}

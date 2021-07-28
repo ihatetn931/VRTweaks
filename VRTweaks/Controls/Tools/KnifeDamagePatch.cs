@@ -7,8 +7,7 @@ namespace VRTweaks.Controls.Tools
 {
 	class KnifeDamagePatch
 	{
-		[HarmonyPatch(typeof(Knife))]
-		[HarmonyPatch(nameof(Knife.OnToolUseAnim))]
+		[HarmonyPatch(typeof(Knife), nameof(Knife.OnToolUseAnim))]
 		class Knife__Patch
 		{
 			[HarmonyPrefix]
@@ -17,7 +16,7 @@ namespace VRTweaks.Controls.Tools
 				Vector3 position = default(Vector3);
 				GameObject gameObject = null;
 				Vector3 normal;
-				UWE.Utils.TraceFPSTargetPosition(Player.main.gameObject, __instance.attackDist, ref gameObject, ref position, out normal, true);
+				TraceFpsTarget.TraceFPSTarget(Player.main.gameObject, __instance.attackDist, ref gameObject, ref position, out normal, true);
 				if (gameObject == null)
 				{
 					InteractionVolumeUser component = Player.main.gameObject.GetComponent<InteractionVolumeUser>();
@@ -26,15 +25,18 @@ namespace VRTweaks.Controls.Tools
 						gameObject = component.GetMostRecent().gameObject;
 					}
 				}
+				ErrorMessage.AddDebug("KnifeGameObject: " + gameObject);
 				if (gameObject)
 				{
 					LiveMixin liveMixin = gameObject.FindAncestor<LiveMixin>();
+					ErrorMessage.AddDebug("KnifeliveMixin: " + liveMixin);
 					if (Knife.IsValidTarget(liveMixin) && liveMixin)
 					{
 						bool wasAlive = liveMixin.IsAlive();
 						XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.deviceVelocity, out Vector3 rightControllerVelocity);
 						float calculatedDamge = rightControllerVelocity.magnitude * 50;
-						//Debug.Log("calculatedDamge: " + calculatedDamge);
+						Debug.Log("calculatedDamge: " + calculatedDamge);
+						ErrorMessage.AddDebug("calculatedDamge: " + calculatedDamge);
 						liveMixin.TakeDamage(calculatedDamge, position, __instance.damageType, global::Utils.GetLocalPlayer());
 						__instance.GiveResourceOnDamage(gameObject, liveMixin.IsAlive(), wasAlive);
 					}

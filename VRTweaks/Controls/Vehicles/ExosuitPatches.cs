@@ -6,7 +6,27 @@ namespace VRTweaks.Controls.Vehicles
 {
     class ExosuitPatches
     {
-		[HarmonyPatch(typeof(ExosuitDrillArm), nameof(ExosuitDrillArm.OnHit))]
+
+		[HarmonyPatch(typeof(Exosuit), nameof(Exosuit.UpdateActiveTarget))]
+		public static class Exosuit_UpdateActiveTarget__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(Exosuit __instance)
+			{
+				GameObject target = null;
+				float num;
+				Target.GetAllTarget(__instance.gameObject, 6f, out target, out num);
+				__instance.activeTarget = __instance.GetInteractableRoot(target);
+				if (__instance.activeTarget != null)
+				{
+					GUIHand component = Player.main.GetComponent<GUIHand>();
+					GUIHand.Send(__instance.activeTarget, HandTargetEventType.Hover, component);
+				}
+				return false;
+			}
+
+		}
+		/*[HarmonyPatch(typeof(ExosuitDrillArm), nameof(ExosuitDrillArm.OnHit))]
 		public static class ExosuitDrillArm_OnHitt__Patch
 		{
 			[HarmonyPrefix]
@@ -116,6 +136,6 @@ namespace VRTweaks.Controls.Vehicles
 				}
 				return false;
 			}
-		}
+		}*/
 	}
 }

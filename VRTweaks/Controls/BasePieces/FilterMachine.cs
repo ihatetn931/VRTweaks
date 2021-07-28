@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
-namespace VRTweaks.Controls.BasePieces
+/*namespace VRTweaks.Controls.BasePieces
 {
     class FilterMachine
     {
@@ -32,4 +32,4 @@ namespace VRTweaks.Controls.BasePieces
 			}
 		}
 	}
-}
+}*/
