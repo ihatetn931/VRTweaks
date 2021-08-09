@@ -57,7 +57,6 @@ namespace VRTweaks.Controls.UI
 				GameObject gameObject = pointerCurrentRaycast.gameObject;
 				if (gameObject != null)
 				{
-
 					fpsRaycastResult = pointerCurrentRaycast;
 					uGUI_InputGroup componentInParent = gameObject.GetComponentInParent<uGUI_InputGroup>();
 					//ErrorMessage.AddDebug("componentInParent: " + componentInParent);

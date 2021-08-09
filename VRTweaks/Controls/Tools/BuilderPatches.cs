@@ -63,6 +63,27 @@ namespace VRTweaks.Controls.Tools
 			}
 		}
 
+		[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
+		class Builder_UpdateRotation_Patch
+		{
+			[HarmonyPrefix]
+			public static bool Prefix(int max, bool __result)
+			{
+				if (GameInput.GetButtonDown(Builder.buttonRotateCW))
+				{
+					Builder.lastRotation = (Builder.lastRotation + max - 1) % max;
+					__result = true;
+				}
+				if (GameInput.GetButtonDown(Builder.buttonRotateCCW))
+				{
+					Builder.lastRotation = (Builder.lastRotation + 1) % max;
+					__result = true;
+				}
+				__result = false;
+				return false;
+			}
+		}
+
 		[HarmonyPatch(typeof(Builder), nameof(Builder.GetAimTransform))]
 		public static class Builder_GetAimTransform__Patch
 		{
@@ -75,27 +96,6 @@ namespace VRTweaks.Controls.Tools
 				return false;
 			}
 		}
-
-		/*[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
-		public static class Builder_UpdateRotation__Patch
-		{
-			[HarmonyPrefix]
-			static bool Prefix(int max,ref bool __result)
-			{
-				if (GameInput.GetButtonDown(Builder.buttonRotateCW) || VRHandsController.leftController.transform.rotation.y >= 60)
-				{
-					Builder.lastRotation = (Builder.lastRotation + max - 1) % max;
-					return true;
-				}
-				if (GameInput.GetButtonDown(Builder.buttonRotateCCW) || VRHandsController.leftController.transform.rotation.y >= -60)
-				{
-					Builder.lastRotation = (Builder.lastRotation + 1) % max;
-					return true;
-				}
-				__result = false;
-				return false;
-			}
-		}*/
 
 		[HarmonyPatch(typeof(Builder), nameof(Builder.SetDefaultPlaceTransform))]
 		public static class Builder_SetDefaultPlaceTransform__Patch

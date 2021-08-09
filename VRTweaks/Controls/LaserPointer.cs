@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using VRTweaks.Controls.UI;
 
 namespace VRTweaks.Controls
@@ -28,6 +29,9 @@ namespace VRTweaks.Controls
         Vector3 cursorScale = new Vector3(0.02f, 0.02f, 0.02f);
         float contactDistance = 0f;
         Transform contactTarget = null;
+        public static Color colorRed = new Color(1, 0, 0, 1);
+        public static Color colorCyan = new Color(0, 1, 1, 0.5f);
+        public static Color colorBlue = new Color(0, 0, 1, 0.5f);
 
         void SetPointerTransform(float setLength, float setThicknes, Vector3 hitPoint)
         {
@@ -41,16 +45,18 @@ namespace VRTweaks.Controls
                 if (showCursor)
                 {
                     cursor.transform.localPosition = new Vector3(setLength - cursor.transform.localScale.x, 0f, 0f);
-                    if (FPSInput.fpsRaycastResult.isValid)
+                    if (FPSInput.fpsRaycastResult.gameObject != null)
                     {
-                        if(!UIcursor.activeSelf)
-                            UIcursor.SetActive(true);
                         UIcursor.transform.localPosition = FPSInput.fpsRaycastResult.worldPosition;
+                        UIcursor.transform.position = FPSInput.fpsRaycastResult.worldPosition;
                         UIcursor.GetComponent<MeshRenderer>().material.color = Color.green;
+                        UIcursor.layer = FPSInput.fpsRaycastResult.gameObject.GetComponent<Image>().gameObject.layer - 1;
+                        //ErrorMessage.AddDebug("ImageLayer: " + FPSInput.fpsRaycastResult.gameObject.GetComponent<Image>().gameObject.layer);
+                        //ErrorMessage.AddDebug("RectTransformLayer: " + FPSInput.fpsRaycastResult.gameObject.GetComponent<RectTransform>().gameObject.layer);
+                        //ErrorMessage.AddDebug("UIcursorLayer: " + UIcursor.layer);
                     }
                     else
                     {
-                        UIcursor.SetActive(false);
                         UIcursor.GetComponent<MeshRenderer>().material.color = Color.black;
                     }
                 }
@@ -70,9 +76,8 @@ namespace VRTweaks.Controls
         // Use this for initialization
         void Start()
         {
-            Color colorRed = new Color(1, 0, 0, 1f);
             Material newMaterial = new Material(Shader.Find("Sprites/Default"));
-            newMaterial.SetColor(ShaderPropertyID._Color, colorRed);
+            newMaterial.SetColor(ShaderPropertyID._Color, colorCyan);
 
             holder = new GameObject();
             holder.transform.parent = this.transform;
@@ -108,7 +113,7 @@ namespace VRTweaks.Controls
                 UIcursor.GetComponent<SphereCollider>().isTrigger = true;
                 UIcursor.AddComponent<Rigidbody>().isKinematic = true;
 
-                UIcursor.layer = LayerID.Trigger;
+                
             }
 
             SetPointerTransform(length, thickness, Vector3.right);
