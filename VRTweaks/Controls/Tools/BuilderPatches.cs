@@ -63,7 +63,7 @@ namespace VRTweaks.Controls.Tools
 			}
 		}
 
-		[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
+		/*[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
 		class Builder_UpdateRotation_Patch
 		{
 			[HarmonyPrefix]
@@ -82,7 +82,7 @@ namespace VRTweaks.Controls.Tools
 				__result = false;
 				return false;
 			}
-		}
+		}*/
 
 		[HarmonyPatch(typeof(Builder), nameof(Builder.GetAimTransform))]
 		public static class Builder_GetAimTransform__Patch
@@ -90,8 +90,6 @@ namespace VRTweaks.Controls.Tools
 			[HarmonyPrefix]
 			static bool Prefix(ref Transform __result)
 			{
-				//VRHandsController.rightController.transform.rotation = MainCamera.camera.transform.rotation;
-				
 				__result = VRHandsController.rightController.transform;
 				return false;
 			}

@@ -8,13 +8,14 @@ namespace VRTweaks.Controls.UI
 {
 
 	[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.ProcessMouseEvent))]
-	public static class FPSInputModuler_UpdateCursor__Patch
+	public static class FPSInputModuler_ProcessMouseEvent__Patch
 	{
 		[HarmonyPrefix]
 		static bool Prefix(FPSInputModule __instance)
 		{
 			__instance.gameObject.AddComponent<FPSInput>();
 			var test = __instance.GetComponent<FPSInput>();
+			FPSInput.fpsInput = __instance;
 			//ErrorMessage.AddDebug("Test: " + test);;
 			if (test != null)
 			{
@@ -28,6 +29,112 @@ namespace VRTweaks.Controls.UI
 		}
 	}
 
+	[HarmonyPatch(typeof(uGUI_InputGroup), nameof(uGUI_InputGroup.Update))]
+	public static class uGUI_InputGroup_Deselect__Patch
+	{
+		[HarmonyPrefix]
+		static bool Prefix(uGUI_InputGroup __instance)
+		{
+			if (__instance.focused && Input.GetKeyDown(KeyCode.Escape) || GameInput.GetButtonDown(GameInput.Button.Exit))
+			{
+				__instance.Deselect(null);
+			}
+			return false;
+		}
+	}
+
+	/*[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.ExtractParams))]
+	public static class FPSInputModuler_ExtractParams__Patch
+	{
+		[HarmonyPrefix]
+		static bool Prefix(GameObject gameObject, Vector3 wsPosition, out Vector3 position, out Quaternion rotation, out Vector3 scale, out int layer,bool __result)
+		{
+			position = Vector3.zero;
+			rotation = Quaternion.identity;
+			scale = Vector3.one;
+			layer = LayerID.Default;
+			if (gameObject == null)
+			{
+				__result = false;
+			}
+			Graphic component = gameObject.GetComponent<Graphic>();
+			if (component == null)
+			{
+				__result = false;
+			}
+			Canvas canvas = component.canvas;
+			if (canvas == null)
+			{
+				__result = false;
+			}
+			RectTransform component2 = canvas.GetComponent<RectTransform>();
+			position = component2.InverseTransformPoint(wsPosition);
+			//position = wsPosition;
+			rotation = component2.rotation;
+			scale = component2.lossyScale;
+			layer = gameObject.layer;
+			__result = true;
+			return false;
+		}
+	}*/
+
+	/*[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.UpdateCursor))]
+	public static class FPSInputModuler_UpdateCursor__Patch
+	{
+		[HarmonyPrefix]
+		static bool Prefix(FPSInputModule __instance)
+		{
+			float num = 0.5f;
+			float num2 = 0.1f;
+			float num3 = Time.unscaledTime - __instance.lastValidRaycastTime;
+			bool flag = __instance.lastGroup != null;
+			if (!VROptions.GetUseGazeBasedCursor())
+			{
+				flag = false;
+			}
+			//ErrorMessage.AddDebug("Name: " + __instance.lastRaycastResult.gameObject.name);
+			Vector3 worldPosition = __instance.lastRaycastResult.worldPosition;
+			if (num3 > 0f)
+			{
+				if (num3 > num + num2)
+				{
+					flag = false;
+				}
+				else
+				{
+					Vector2 cursorScreenPosition = __instance.GetCursorScreenPosition();
+					if (!FPSInputModule.ScreenToWorldPoint(__instance.lastRaycastResult, cursorScreenPosition, ref worldPosition))
+					{
+						flag = false;
+					}
+				}
+			}
+			GameObject cursor = __instance.cursor;
+			Vector3 vector;
+			Quaternion rotation;
+			Vector3 localScale;
+			int layer;
+			if (flag && FPSInputModule.ExtractParams(__instance.lastRaycastResult.gameObject, worldPosition, out vector, out rotation, out localScale, out layer))
+			{
+				cursor.layer = layer;
+				cursor.transform.position = worldPosition;
+				cursor.transform.rotation = rotation;
+				cursor.transform.localScale = localScale;
+				if (__instance.cursorGraphic != null)
+				{
+					Color color = __instance.cursorGraphic.color;
+					color.a = 1f - Mathf.Clamp01((num3 - num) / num2);
+					__instance.cursorGraphic.color = color;
+				}
+			}
+			if (cursor.activeSelf != flag)
+			{
+				cursor.SetActive(flag);
+			}
+			return false;
+		}
+	}*/
+
 	public class FPSInput : VRInputModule
 	{
 		public static Vector2 result;
@@ -35,10 +142,65 @@ namespace VRTweaks.Controls.UI
 		public static float Distance = 0;
 		private GameObject lastPress;
 		public uGUI_InputGroup lastGroup { get; private set; }
-		private bool skipMouseEvent;
+		public static bool skipMouseEvent;
 		private bool _lockRotation;
 		public static RaycastResult fpsRaycastResult;
 		private GameObject[] dragHoverHandler = new GameObject[3];
+		private readonly VRInputModule.VRState m_MouseState = new VRInputModule.VRState();
+		public static Vector2 pointerPosition = Vector2.right;
+		//public static PointerEventData pointerEventData;
+
+	/*	protected override VRInputModule.VRState GetMousePointerEventData()
+		{
+			PointerEventData pointerEventData;
+			base.GetPointerData(-1, out pointerEventData, true);
+			pointerEventData.Reset();
+			Vector2 cursorScreenPosition = FPSInputModule.current.GetCursorScreenPosition();
+			pointerEventData.delta = Vector2.zero;
+			pointerEventData.position = cursorScreenPosition;
+			pointerEventData.scrollDelta = Input.mouseScrollDelta;
+			pointerEventData.button = PointerEventData.InputButton.Left;
+			this.m_RaycastResultCache.Clear();
+			RaycastResult raycastResult = default(RaycastResult);
+			if (this.lastGroup == null || !this.lastGroup.Raycast(pointerEventData, this.m_RaycastResultCache))
+			{
+				base.eventSystem.RaycastAll(pointerEventData, this.m_RaycastResultCache);
+			}
+			this.m_RaycastResultCache.Sort(FPSInputModule.s_RaycastComparer);
+			raycastResult = BaseInputModule.FindFirstRaycast(this.m_RaycastResultCache);
+			raycastResult.screenPosition = cursorScreenPosition;
+			this.m_RaycastResultCache.Clear();
+			if (raycastResult.isValid)
+			{
+				Camera eventCamera = raycastResult.module.eventCamera;
+				if (eventCamera != null)
+				{
+					raycastResult.worldPosition = eventCamera.ScreenPointToRay(raycastResult.screenPosition).GetPoint(raycastResult.distance);
+				}
+			}
+			pointerEventData.pointerCurrentRaycast = raycastResult;
+			Vector2 zero = Vector2.zero;
+			if (FPSInputModule.ScreenToCanvasPoint(raycastResult, cursorScreenPosition, ref zero))
+			{
+				pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
+				FPSInputModule.current.pointerPosition = zero;
+				FPSInputModule.current.lastRaycastResult = raycastResult;
+				FPSInputModule.current.lastValidRaycastTime = Time.unscaledTime;
+			}
+			else if (FPSInputModule.ScreenToCanvasPoint(FPSInputModule.current.lastRaycastResult, cursorScreenPosition, ref zero))
+			{
+				pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
+				FPSInputModule.current.pointerPosition = zero;
+				FPSInputModule.current.lastRaycastResult.screenPosition = cursorScreenPosition;
+			}
+			else
+			{
+				FPSInputModule.current.lastRaycastResult = default(RaycastResult);
+			}
+			CursorManager.SetRaycastResult(FPSInputModule.current.lastRaycastResult);
+			FPSInputModule.current.UpdateMouseState(pointerEventData);
+			return this.m_MouseState;
+		}*/
 
 		public void ProcessMouseEvent(FPSInputModule inputFPS)
 		{
@@ -46,7 +208,7 @@ namespace VRTweaks.Controls.UI
 			//ErrorMessage.AddDebug("AnyPressesThisFrame: " + mousePointerEventData.);
 			VRInputModule.VRButtonEventData eventData = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Left).eventData;
 			VRInputModule.VRButtonEventData eventData2 = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Right).eventData;
-			//VRInputModule.VRButtonEventData eventData3 = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Middle).eventData;
+			//VRInputModule.VRButtonEventData eventData3 = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Right).eventData;
 			PointerEventData buttonData = eventData.buttonData;
 			PointerEventData buttonData2 = eventData2.buttonData;
 			//PointerEventData buttonData3 = eventData3.buttonData;
@@ -66,7 +228,7 @@ namespace VRTweaks.Controls.UI
 					}
 					ITooltip componentInParent2 = gameObject.GetComponentInParent<ITooltip>();
 					//ErrorMessage.AddDebug("componentInParent2: " + componentInParent2);
-					if (componentInParent2 == null || (!componentInParent2.showTooltipOnDrag && (buttonData.dragging || buttonData2.dragging /*|| buttonData3.dragging*/)))
+					if (componentInParent2 == null || (!componentInParent2.showTooltipOnDrag && (buttonData.dragging || buttonData2.dragging)))
 					{
 						uGUI_Tooltip.Clear();
 					}
@@ -95,6 +257,8 @@ namespace VRTweaks.Controls.UI
 				}
 			}
 		}
+	
+
 		[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.GetCursorScreenPosition))]
 		public static class FPSInputModuler_GetCursorScreenPosition__Patch
 		{
@@ -104,13 +268,19 @@ namespace VRTweaks.Controls.UI
 				fpsInput = __instance;
 				if (VROptions.GetUseGazeBasedCursor() || !Input.mousePresent || Cursor.lockState == CursorLockMode.Locked)
 				{
-					result = GraphicsUtil.GetScreenSize() * 0.5f;
+					if (VRHandsController.rightController != null)
+					{
+						//ErrorMessage.AddDebug("Gaze");
+						//result = GraphicsUtil.GetScreenSize() * 0.5f;
+						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
+					}
 				}
 				else
 				{
 					if (VRHandsController.rightController != null)
 					{
-						result = new Vector2(VRHandsController.rightController.transform.position.x, VRHandsController.rightController.transform.position.y);
+						//ErrorMessage.AddDebug("NoGaze");
+						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);//new Vector2(VRHandsController.rightController.transform.position.x, VRHandsController.rightController.transform.position.y);
 					}
 				}
 				__result = result;
@@ -347,6 +517,8 @@ namespace VRTweaks.Controls.UI
 			}
 		}
 
+
+
 		public bool lockRotation
 		{
 			get
@@ -375,8 +547,8 @@ namespace VRTweaks.Controls.UI
 					GameInput.ClearInput();
 					newGroup.OnSelect(lockMovement);
 					this.lastGroup = newGroup;
-					this.lockRotation = true;
-					this.skipMouseEvent = true;
+					//this.lockRotation = true;
+					skipMouseEvent = true;
 				}
 			}
 			else if (newGroup == null)
@@ -386,7 +558,7 @@ namespace VRTweaks.Controls.UI
 				this.lastGroup = null;
 				this.lastPress = null;
 				this.lockRotation = false;
-				this.skipMouseEvent = true;
+				skipMouseEvent = true;
 			}
 			else if (this.lastGroup != newGroup)
 			{
@@ -394,13 +566,14 @@ namespace VRTweaks.Controls.UI
 				this.lastGroup.OnDeselect();
 				newGroup.OnSelect(lockMovement);
 				this.lastGroup = newGroup;
-				this.skipMouseEvent = true;
+				skipMouseEvent = true;
 			}
 			else
 			{
 				this.lastGroup.OnReselect(lockMovement);
 			}
 			GamepadInputModule gamepadInputModule = GamepadInputModule.current;
+
 			if (gamepadInputModule != null)
 			{
 				gamepadInputModule.OnGroupChanged(newGroup);

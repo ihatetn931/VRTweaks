@@ -24,6 +24,7 @@ namespace VRTweaks
             {
                 return;
             }
+
             File.AppendAllText("VRTweaksLog.txt", "Initializing" + Environment.NewLine);
 
             new GameObject("_VRTweaks").AddComponent<VRTweaks>();
@@ -59,6 +60,12 @@ namespace VRTweaks
         {
             yield return new WaitForSeconds(1);
             Recenter();
+            bool on = false;
+            if (VROptions.gazeBasedCursor && on == false)
+            {
+                VROptions.gazeBasedCursor = false;
+                on = true;
+            }
             yield break;
         }
         

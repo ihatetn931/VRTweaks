@@ -25,18 +25,18 @@ namespace VRTweaks.Controls.Tools
 						gameObject = component.GetMostRecent().gameObject;
 					}
 				}
-				ErrorMessage.AddDebug("KnifeGameObject: " + gameObject);
+				//ErrorMessage.AddDebug("KnifeGameObject: " + gameObject);
 				if (gameObject)
 				{
 					LiveMixin liveMixin = gameObject.FindAncestor<LiveMixin>();
-					ErrorMessage.AddDebug("KnifeliveMixin: " + liveMixin);
+					//ErrorMessage.AddDebug("KnifeliveMixin: " + liveMixin);
 					if (Knife.IsValidTarget(liveMixin) && liveMixin)
 					{
 						bool wasAlive = liveMixin.IsAlive();
 						XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.deviceVelocity, out Vector3 rightControllerVelocity);
 						float calculatedDamge = rightControllerVelocity.magnitude * 50;
-						Debug.Log("calculatedDamge: " + calculatedDamge);
-						ErrorMessage.AddDebug("calculatedDamge: " + calculatedDamge);
+						//Debug.Log("calculatedDamge: " + calculatedDamge);
+						//ErrorMessage.AddDebug("calculatedDamge: " + calculatedDamge);
 						liveMixin.TakeDamage(calculatedDamge, position, __instance.damageType, global::Utils.GetLocalPlayer());
 						__instance.GiveResourceOnDamage(gameObject, liveMixin.IsAlive(), wasAlive);
 					}

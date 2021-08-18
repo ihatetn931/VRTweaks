@@ -2,6 +2,7 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace VRTweaks.Controls
 {
@@ -58,10 +59,10 @@ namespace VRTweaks.Controls
 		{
 			return this.GetMousePointerEventData(0);
 		}
-
+		public static PointerEventData pointerEventData;
 		protected virtual VRInputModule.VRState GetMousePointerEventData(int id)
 		{
-			PointerEventData pointerEventData;
+			//PointerEventData pointerEventData;
 			bool pointerData = this.GetPointerData(-1, out pointerEventData, true);
 			pointerEventData.Reset();
 			if (pointerData)
@@ -72,39 +73,72 @@ namespace VRTweaks.Controls
 			if (VRHandsController.rightController != null && Camera.main != null)
 			{
 				Vector2 mousePosition = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);//Camera.main.WorldToViewportPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
+																																																								 
 				//ErrorMessage.AddDebug("LockState: " + Cursor.lockState);
-				//if (Cursor.lockState == CursorLockMode.Locked)
-				//{
-				//	Cursor.lockState = CursorLockMode.None;
-				//	pointerEventData.position = new Vector2(-1f, -1f);
-				//	pointerEventData.delta = Vector2.zero;
-			//	}
+				if (Cursor.lockState == CursorLockMode.Locked)
+				{
+					Cursor.lockState = CursorLockMode.None;
+					//pointerEventData.position = new Vector2(-1f, -1f);
+					//pointerEventData.delta = Vector2.zero;
+				}
 				//else
 				//{
-				pointerEventData.delta = mousePosition - pointerEventData.position;
+				Vector2 cursorScreenPosition = FPSInputModule.current.GetCursorScreenPosition();
+				Vector2 zero = Vector3.zero;
+				//pointerEventData.delta = zero - this.pointerPosition; 
+				pointerEventData.delta = Vector3.zero;
 				pointerEventData.position = mousePosition;
 				//}
 				//pointerEventData.scrollDelta = base.input.mouseScrollDelta;
 				pointerEventData.button = PointerEventData.InputButton.Left;
-				base.eventSystem.RaycastAll(pointerEventData, this.m_RaycastResultCache);
+				if (FPSInputModule.current.lastGroup == null || !FPSInputModule.current.lastGroup.Raycast(pointerEventData, this.m_RaycastResultCache))
+				{ 
+					base.eventSystem.RaycastAll(pointerEventData, this.m_RaycastResultCache);
+				}
+				this.m_RaycastResultCache.Sort(FPSInputModule.s_RaycastComparer);
+
+				//base.eventSystem.RaycastAll(pointerEventData, this.m_RaycastResultCache);
 				RaycastResult pointerCurrentRaycast = BaseInputModule.FindFirstRaycast(this.m_RaycastResultCache);
+				pointerCurrentRaycast.screenPosition = cursorScreenPosition;
+				if (pointerCurrentRaycast.isValid)
+				{
+					Camera eventCamera = pointerCurrentRaycast.module.eventCamera;
+					if (eventCamera != null)
+					{
+						//ErrorMessage.AddDebug("ScreenPointToRay");
+						//ErrorMessage.AddDebug("EventCamera: " + eventCamera);
+						pointerCurrentRaycast.worldPosition = eventCamera.ScreenPointToRay(pointerCurrentRaycast.screenPosition).GetPoint(pointerCurrentRaycast.distance);
+					}
+				}
 				pointerEventData.pointerCurrentRaycast = pointerCurrentRaycast;
-				//ErrorMessage.AddDebug("pointerCurrentRaycastGO: " + pointerCurrentRaycast.gameObject);
+				if (FPSInputModule.ScreenToCanvasPoint(pointerCurrentRaycast, cursorScreenPosition, ref zero))
+				{
+					//ErrorMessage.AddDebug("ScreenToCanvasPoint");
+					pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
+					FPSInputModule.current.pointerPosition = transform.right;
+					FPSInputModule.current.lastRaycastResult = pointerCurrentRaycast;
+					FPSInputModule.current.lastValidRaycastTime = Time.unscaledTime;
+				}
+
+				CursorManager.SetRaycastResult(FPSInputModule.current.lastRaycastResult);
+				FPSInputModule.current.UpdateMouseState(pointerEventData);
+				UI.FPSInput.fpsRaycastResult.Clear();
 				this.m_RaycastResultCache.Clear();
 				PointerEventData pointerEventData2;
 				this.GetPointerData(-2, out pointerEventData2, true);
 				this.CopyFromTo(pointerEventData, pointerEventData2);
 				pointerEventData2.button = PointerEventData.InputButton.Right;
-				PointerEventData pointerEventData3;
-				this.GetPointerData(-3, out pointerEventData3, true);
-				this.CopyFromTo(pointerEventData, pointerEventData3);
-				pointerEventData3.button = PointerEventData.InputButton.Left;
+				//PointerEventData pointerEventData3;
+				//this.GetPointerData(-3, out pointerEventData3, true);
+				//this.CopyFromTo(pointerEventData, pointerEventData3);
+				//pointerEventData3.button = PointerEventData.InputButton.Right;
 				this.m_MouseState.SetButtonState(PointerEventData.InputButton.Left, this.StateForMouseButton(GameInput.Button.LeftHand), pointerEventData);
-				this.m_MouseState.SetButtonState(PointerEventData.InputButton.Right, this.StateForMouseButton(GameInput.Button.RightHand), pointerEventData2);
-				this.m_MouseState.SetButtonState(PointerEventData.InputButton.Middle, this.StateForMouseButton(GameInput.Button.PDA), pointerEventData3);
+				this.m_MouseState.SetButtonState(PointerEventData.InputButton.Right, this.StateForMouseButton(GameInput.Button.UICancel), pointerEventData2);
+				 //this.m_MouseState.SetButtonState(PointerEventData.InputButton.Right, this.StateForMouseButton(GameInput.Button.UICancel), pointerEventData3);
 			}
 			return this.m_MouseState;
 		}
+
 
 		protected PointerEventData GetLastPointerEventData(int id)
 		{

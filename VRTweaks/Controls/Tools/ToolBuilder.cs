@@ -1,6 +1,7 @@
 ﻿using FMODUnity;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace VRTweaks.Controls.Tools
 {
@@ -28,14 +29,16 @@ namespace VRTweaks.Controls.Tools
 				Targeting.AddToIgnoreList(Player.main.gameObject);
 				GameObject gameObject;
 				float num;
-				Target.GetTargets(30f, out gameObject, out num);
+				Targeting.GetTarget(30f, out gameObject, out num);
 				if (gameObject == null)
 				{
 					return false;
 				}
 				bool buttonHeld = GameInput.GetButtonHeld(GameInput.Button.LeftHand);
-				bool buttonDown = GameInput.GetButtonDown(GameInput.Button.Deconstruct);
-				bool buttonHeld2 = GameInput.GetButtonHeld(GameInput.Button.Deconstruct);
+			//	bool buttonDown = GameInput.GetButtonDown(GameInput.Button.Deconstruct);
+				float deconstruct1 = GameInput.GetButtonHeldTime(GameInput.Button.MoveUp);
+				float deconstruct2 = GameInput.GetButtonHeldTime(GameInput.Button.MoveDown);
+			//	bool buttonHeld2 = GameInput.GetButtonHeld(GameInput.Button.Deconstruct);
 				Constructable constructable = gameObject.GetComponentInParent<Constructable>();
 				if (constructable != null && num > constructable.placeMaxDistance)
 				{
@@ -52,7 +55,7 @@ namespace VRTweaks.Controls.Tools
 					string text;
 					if (constructable.DeconstructionAllowed(out text))
 					{
-						if (buttonHeld2)
+						if (deconstruct1 > 0.2f && deconstruct2 > 0.2f)
 						{
 							if (constructable.constructed)
 							{
@@ -60,11 +63,11 @@ namespace VRTweaks.Controls.Tools
 								constructable.SetState(false, false);
 								return false;
 							}
-							__instance.Construct(constructable, false, buttonDown);
+							__instance.Construct(constructable, false, deconstruct1 > 0.2f && deconstruct2 > 0.2f);
 							return false;
 						}
 					}
-					else if (buttonDown && !string.IsNullOrEmpty(text))
+					else if (deconstruct1 > 0.2f && deconstruct2 > 0.2f && !string.IsNullOrEmpty(text))
 					{
 						RuntimeManager.PlayOneShot("event:/bz/ui/item_error", default(Vector3));
 						ErrorMessage.AddMessage(text);
@@ -88,14 +91,14 @@ namespace VRTweaks.Controls.Tools
 						if (baseDeconstructable.DeconstructionAllowed(out text))
 						{
 							__instance.OnHover(baseDeconstructable);
-							if (buttonDown)
+							if (deconstruct1 > 0.2f && deconstruct2 > 0.2f)
 							{
 								Builder.ResetLast();
 								baseDeconstructable.Deconstruct();
 								return false;
 							}
 						}
-						else if (buttonDown && !string.IsNullOrEmpty(text))
+						else if (deconstruct1 > 0.2f && deconstruct2 > 0.2f && !string.IsNullOrEmpty(text))
 						{
 							RuntimeManager.PlayOneShot("event:/bz/ui/item_error", default(Vector3));
 							ErrorMessage.AddMessage(text);

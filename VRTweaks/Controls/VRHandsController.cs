@@ -36,10 +36,7 @@ namespace VRTweaks.Controls
         public void Initialize(ArmsController controller)
         {
             player = global::Utils.GetLocalPlayerComp();
-            if(VROptions.gazeBasedCursor)
-            {
-                VROptions.gazeBasedCursor = false;
-            }
+
             if (MotionControlConfig.ToggleDebugControllerBoxes)
             {
                 Time.fixedDeltaTime = (Time.timeScale / XRDevice.refreshRate);
@@ -63,9 +60,9 @@ namespace VRTweaks.Controls
                 rightController = new GameObject("rightController");
                 leftController = new GameObject("leftController");
             }
-            line.transform.SetParent(rightController.transform);
             rightController.transform.parent = player.camRoot.transform;
             leftController.transform.parent = player.camRoot.transform;
+            line.transform.SetParent(player.camRoot.transform);
             IKSolverFullBodyBiped solver = ik.solver;
             solver.OnPostUpdate = (IKSolver.UpdateDelegate)Delegate.Combine(solver.OnPostUpdate, new IKSolver.UpdateDelegate(RotateShoulders));
         }
@@ -112,6 +109,10 @@ namespace VRTweaks.Controls
 
         public void UpdateHandPositions()
         {
+            if (!VROptions.gazeBasedCursor)
+            {
+                VROptions.gazeBasedCursor = true;
+            }
             InventoryItem heldTool = Inventory.main.quickSlots.heldItem;
             XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rightPos);
             XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rightRot);
@@ -130,6 +131,7 @@ namespace VRTweaks.Controls
             {
                 if (heldTool.item != null)
                 {
+                   // line.transform.SetParent(heldTool.item.transform);
                     ik.solver.rightHandEffector.target = rightController.transform;
                 }
             }
