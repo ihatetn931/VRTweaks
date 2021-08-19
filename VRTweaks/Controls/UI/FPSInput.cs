@@ -288,77 +288,6 @@ namespace VRTweaks.Controls.UI
 			}
 		}
 
-		/*public static void GetAll(FPSInput test)
-		{
-			test.GetDistance();
-		}
-
-		public void GetDistance()
-		{
-			RaycastHit hitObject;
-			if (VRHandsController.rightController != null)
-			{
-				Ray raycast = new Ray(VRHandsController.rightController.transform.position, VRHandsController.rightController.transform.right * fpsInput.maxInteractionDistance);
-				PointerEventData _pointerEventData = new PointerEventData(EventSystem.current);
-				if (Physics.Raycast(raycast, out hitObject))
-				{
-					//ErrorMessage.AddDebug("hitObject: " + hitObject.transform.gameObject);
-					//PointerEnter(hitObject, _pointerEventData);
-				}
-			}
-		}
-
-		public void PointerEnter(RaycastHit obj, PointerEventData eventData)
-		{
-			if (obj.transform != null)
-			{
-				List<RaycastResult> results = new List<RaycastResult>();
-				base.GetPointerData(1, out eventData, true);
-
-				eventData.Reset();
-				eventData.delta = Vector2.zero;
-				eventData.position = Camera.main.WorldToScreenPoint(obj.point);
-				eventData.button = PointerEventData.InputButton.Left;
-
-				base.eventSystem.RaycastAll(eventData, results);
-				//PointerInputModule.MouseState mousePointerEventData = this.GetMousePointerEventData();
-				VRInputModule.VRState mousePointerEventData = this.GetMousePointerEventData();
-				VRInputModule.VRButtonEventData buttData = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Left).eventData;
-				VRInputModule.VRButtonEventData eventData2 = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Right).eventData;
-				VRInputModule.VRButtonEventData eventData3 = mousePointerEventData.GetButtonState(PointerEventData.InputButton.Middle).eventData;
-
-				PointerEventData buttonData = buttData.buttonData;
-				PointerEventData buttonData2 = eventData2.buttonData;
-				PointerEventData buttonData3 = eventData3.buttonData;
-				RaycastResult pointerCurrentRaycast = buttonData.pointerCurrentRaycast;
-
-				this.ProcessHover(buttonData);
-				this.ProcessMousePress(buttData);
-				this.ProcessMove(buttonData);
-				this.ProcessDrag(buttonData);
-				this.ProcessDragHover(buttonData, ref this.dragHoverHandler[0]);
-				this.ProcessMousePress(eventData2);
-				this.ProcessDrag(buttonData2);
-				this.ProcessDragHover(buttonData2, ref this.dragHoverHandler[1]);
-				this.ProcessMousePress(eventData3);
-				this.ProcessDrag(buttonData3);
-				this.ProcessDragHover(buttonData2, ref this.dragHoverHandler[2]);
-				if (!Mathf.Approximately(buttonData.scrollDelta.sqrMagnitude, 0f))
-				{
-					ExecuteEvents.ExecuteHierarchy<IScrollHandler>(ExecuteEvents.GetEventHandler<IScrollHandler>(pointerCurrentRaycast.gameObject), buttonData, ExecuteEvents.scrollHandler);
-				}
-				foreach (var res in results)
-                {
-					base.HandlePointerExitAndEnter(eventData, res.gameObject);
-					//ErrorMessage.AddDebug("Results: " + res.gameObject.name);
-					if (res.distance <= LaserPointer.maxHitDistance)
-					{
-						Distance = res.distance;
-					}
-				}
-			}
-		}*/
-
 		protected override void ProcessMove(PointerEventData pointerEvent)
 		{
 			GameObject gameObject = pointerEvent.pointerCurrentRaycast.gameObject;
@@ -516,8 +445,6 @@ namespace VRTweaks.Controls.UI
 				}
 			}
 		}
-
-
 
 		public bool lockRotation
 		{

@@ -144,9 +144,7 @@
     <Compile Include="Controls\Tools\CutterLaser.cs" />
     <Compile Include="Controls\Tools\PlayerPda.cs" />
     <Compile Include="Controls\Tools\ToolBuilder.cs" />
-    <Compile Include="Controls\UI\GamePadInputMod.cs" />
     <Compile Include="Controls\UI\HighLight.cs" />
-    <Compile Include="Controls\UI\Reflect.cs" />
     <Compile Include="Controls\UpdateHands.cs" />
     <Compile Include="Controls\Vehicles\ExoSuitMotionPatch.cs" />
     <Compile Include="Controls\ExpMenu.cs" />

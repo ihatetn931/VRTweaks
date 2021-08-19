@@ -30,10 +30,10 @@ namespace VRTweaks.Controls
         Vector3 cursorScale = new Vector3(0.02f, 0.02f, 0.02f);
         float contactDistance = 0f;
         Transform contactTarget = null;
-        public static Color colorRed = new Color(1, 0, 0, 0.8f);
-        public static Color colorCyan = new Color(0, 1, 1, 0.8f);
-        public static Color colorBlue = new Color(0, 0, 1, 0.8f);
-        public static Color colorGreen = new Color(0, 1, 0, 0.8f);
+        public static Color colorRed = new Color(1, 0, 0, 1f);
+        public static Color colorCyan = new Color(0, 1, 1, 1f);
+        public static Color colorBlue = new Color(0, 0, 1, 1f);
+        public static Color colorGreen = new Color(0, 1, 0, 1f);
         public float speed = 1.0f;
 
         void SetPointerTransform(float setLength, float setThicknes, RaycastHit hitPoint)
