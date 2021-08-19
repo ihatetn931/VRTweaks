@@ -68,11 +68,11 @@ namespace VRTweaks.Controls
 			if (pointerData)
 			{
 				if (VRHandsController.rightController != null && Camera.main != null)
-					pointerEventData.position = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);//Camera.main.WorldToViewportPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
+					pointerEventData.position = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance);//Camera.main.WorldToViewportPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
 			}
 			if (VRHandsController.rightController != null && Camera.main != null)
 			{
-				Vector2 mousePosition = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);//Camera.main.WorldToViewportPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
+				Vector2 mousePosition = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance);//Camera.main.WorldToViewportPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
 																																																								 
 				//ErrorMessage.AddDebug("LockState: " + Cursor.lockState);
 				if (Cursor.lockState == CursorLockMode.Locked)
@@ -115,7 +115,7 @@ namespace VRTweaks.Controls
 				{
 					//ErrorMessage.AddDebug("ScreenToCanvasPoint");
 					pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
-					FPSInputModule.current.pointerPosition = transform.right;
+					FPSInputModule.current.pointerPosition = transform.forward;
 					FPSInputModule.current.lastRaycastResult = pointerCurrentRaycast;
 					FPSInputModule.current.lastValidRaycastTime = Time.unscaledTime;
 				}

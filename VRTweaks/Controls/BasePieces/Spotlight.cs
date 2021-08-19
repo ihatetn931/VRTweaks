@@ -15,7 +15,7 @@ namespace VRTweaks.Controls.BasePieces
 				geometryChanged = false;
 				if (hit.collider && hit.collider.gameObject)
 				{
-					ghostModel.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(aimTransform.right, hit.normal), hit.normal);
+					ghostModel.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(aimTransform.forward, hit.normal), hit.normal);
 					result = (Constructable.CheckFlags(__instance.allowedInBase, __instance.allowedInSub, __instance.allowedOutside, __instance.allowedUnderwater, aimTransform) && hit.collider.gameObject.GetComponentInParent<Base>() != null);
 				}
 				__result = result;

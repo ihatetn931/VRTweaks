@@ -147,7 +147,7 @@ namespace VRTweaks.Controls.UI
 		public static RaycastResult fpsRaycastResult;
 		private GameObject[] dragHoverHandler = new GameObject[3];
 		private readonly VRInputModule.VRState m_MouseState = new VRInputModule.VRState();
-		public static Vector2 pointerPosition = Vector2.right;
+		public static Vector2 pointerPosition = Vector2.zero;
 		//public static PointerEventData pointerEventData;
 
 	/*	protected override VRInputModule.VRState GetMousePointerEventData()
@@ -272,7 +272,7 @@ namespace VRTweaks.Controls.UI
 					{
 						//ErrorMessage.AddDebug("Gaze");
 						//result = GraphicsUtil.GetScreenSize() * 0.5f;
-						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);
+						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance);
 					}
 				}
 				else
@@ -280,7 +280,7 @@ namespace VRTweaks.Controls.UI
 					if (VRHandsController.rightController != null)
 					{
 						//ErrorMessage.AddDebug("NoGaze");
-						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * FPSInputModule.current.maxInteractionDistance);//new Vector2(VRHandsController.rightController.transform.position.x, VRHandsController.rightController.transform.position.y);
+						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance);//new Vector2(VRHandsController.rightController.transform.position.x, VRHandsController.rightController.transform.position.y);
 					}
 				}
 				__result = result;

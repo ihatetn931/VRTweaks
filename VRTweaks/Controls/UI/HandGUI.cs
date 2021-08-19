@@ -237,7 +237,7 @@ namespace VRTweaks.Controls.UI
 							VFXSurfaceTypes vfxsurfaceTypes = VFXSurfaceTypes.none;
 							int layerMask = 1 << LayerID.TerrainCollider | 1 << LayerID.Default;
 							RaycastHit raycastHit;
-							if (Physics.Raycast(VRHandsController.rightController.transform.position, VRHandsController.rightController.transform.right, out raycastHit, 3f, layerMask) && raycastHit.collider.gameObject.layer == LayerID.TerrainCollider)
+							if (Physics.Raycast(VRHandsController.rightController.transform.position, VRHandsController.rightController.transform.forward, out raycastHit, 3f, layerMask) && raycastHit.collider.gameObject.layer == LayerID.TerrainCollider)
 							{
 								vfxsurfaceTypes = global::Utils.GetTerrainSurfaceType(raycastHit.point, raycastHit.normal, VFXSurfaceTypes.none);
 							}
@@ -283,7 +283,7 @@ namespace VRTweaks.Controls.UI
 			static bool Prefix(ref Vector3 __result,GUIHand __instance)
             {
 				//Camera playerCamera = __instance.GetPlayerCamera();
-				__result = VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.right * __instance.activeHitDistance;
+				__result = VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * __instance.activeHitDistance;
 				return false;
             }
 		}
@@ -294,7 +294,7 @@ namespace VRTweaks.Controls.UI
 			[HarmonyPrefix]
 			static bool Prefix(ref Facing __result, GUIHand __instance)
 			{
-				Vector3 vector = __instance.player.GetCurrentSub().transform.InverseTransformDirection(__instance.player.transform.right);
+				Vector3 vector = __instance.player.GetCurrentSub().transform.InverseTransformDirection(__instance.player.transform.forward);
 				float x = vector.x;
 				float z = vector.z;
 				if (Mathf.Abs(x) > Mathf.Abs(z))

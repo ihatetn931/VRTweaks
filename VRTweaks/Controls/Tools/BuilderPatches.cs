@@ -23,7 +23,7 @@ namespace VRTweaks.Controls.Tools
 				}
 				Builder.placementTarget = null;
 				RaycastHit hit;
-				if (!Physics.Raycast(aimTransform.position, aimTransform.right, out hit, Builder.placeMaxDistance, Builder.placeLayerMask.value, QueryTriggerInteraction.Ignore))
+				if (!Physics.Raycast(aimTransform.position, aimTransform.forward, out hit, Builder.placeMaxDistance, Builder.placeLayerMask.value, QueryTriggerInteraction.Ignore))
 				{
 					return false;
 				}
@@ -102,19 +102,19 @@ namespace VRTweaks.Controls.Tools
 			static bool Prefix(ref Vector3 position, ref Quaternion rotation)
 			{
 				Transform aimTransform = Builder.GetAimTransform();
-				position = aimTransform.position + aimTransform.right * Builder.placeDefaultDistance;
+				position = aimTransform.position + aimTransform.forward * Builder.placeDefaultDistance;
 				Vector3 forward;
 				Vector3 up;
 				if (Builder.forceUpright)
 				{
-					forward = -aimTransform.right;
+					forward = aimTransform.forward;
 					forward.y = 0f;
 					forward.Normalize();
 					up = Vector3.up;
 				}
 				else
 				{
-					forward = -aimTransform.right;
+					forward = aimTransform.forward;
 					up = aimTransform.up;
 				}
 				rotation = Quaternion.LookRotation(forward, up);
@@ -133,11 +133,11 @@ namespace VRTweaks.Controls.Tools
 			static bool Prefix(RaycastHit hit, ref Vector3 position, ref Quaternion rotation)
 			{
 				Transform aimTransform = Builder.GetAimTransform();
-				Vector3 vector = Vector3.right;
+				Vector3 vector = -Vector3.forward;
 				Vector3 vector2 = Vector3.up;
 				if (Builder.forceUpright)
 				{
-					vector = -aimTransform.right;
+					vector = aimTransform.forward;
 					vector.y = 0f;
 					vector.Normalize();
 					vector2 = Vector3.up;
@@ -148,7 +148,7 @@ namespace VRTweaks.Controls.Tools
 					{
 						case SurfaceType.Ground:
 							vector2 = hit.normal;
-							vector = -aimTransform.right;
+							vector = aimTransform.forward;
 							vector.y -= Vector3.Dot(vector, vector2);
 							vector.Normalize();
 							break;
@@ -158,7 +158,7 @@ namespace VRTweaks.Controls.Tools
 							break;
 						case SurfaceType.Ceiling:
 							vector = hit.normal;
-							vector2 = -aimTransform.right;
+							vector2 = aimTransform.forward;
 							vector2.y -= Vector3.Dot(vector2, vector);
 							vector2.Normalize();
 							break;

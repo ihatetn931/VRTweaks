@@ -37,7 +37,7 @@ namespace VRTweaks.Controls
         {
             player = global::Utils.GetLocalPlayerComp();
 
-            if (MotionControlConfig.ToggleDebugControllerBoxes)
+            if (MotionControlConfig.EnableMotionControls)
             {
                 Time.fixedDeltaTime = (Time.timeScale / XRDevice.refreshRate);
                 //var update = controller.gameObject.AddComponent<UpdateHand>();
@@ -48,17 +48,10 @@ namespace VRTweaks.Controls
                 ik = controller.GetComponent<FullBodyBipedIK>();
                 armsController = controller;
 
-                leftController = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                leftController.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                leftController.GetComponent<Renderer>().material = newMaterial;
+                leftController = new GameObject("leftController");
 
                 line = rightController.AddComponent<LaserPointer>();
                 line = rightController.GetComponent<LaserPointer>();
-            }
-            else
-            {
-                rightController = new GameObject("rightController");
-                leftController = new GameObject("leftController");
             }
             rightController.transform.parent = player.camRoot.transform;
             leftController.transform.parent = player.camRoot.transform;
@@ -116,30 +109,31 @@ namespace VRTweaks.Controls
             InventoryItem heldTool = Inventory.main.quickSlots.heldItem;
             XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rightPos);
             XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rightRot);
-            
-            rightController.transform.localPosition = rightPos + new Vector3(0f, 0f, 0f);
-            rightController.transform.localRotation = rightRot * Quaternion.Euler(0f, 190f, 270f);
+
+            rightController.transform.localPosition = rightPos;// + new Vector3(0f, 0f, 0f);
+            rightController.transform.localRotation = rightRot;// * Quaternion.Euler(0f, 190f, 270f);
 
             //Get left controller Position and Rotation
             XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 leftPos);
             XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion leftRot);
 
             leftController.transform.localPosition = leftPos + new Vector3(0f, -0.13f, -0.14f) ;
-            leftController.transform.localRotation  = leftRot * Quaternion.Euler(270f, 90f, 0f);
+            leftController.transform.localRotation = leftRot * Quaternion.Euler(270f, 90f, 0f);
 
             if (heldTool != null)
             {
                 if (heldTool.item != null)
                 {
                    // line.transform.SetParent(heldTool.item.transform);
-                    ik.solver.rightHandEffector.target = rightController.transform;
+                    ik.solver.rightHandEffector.target.gameObject.transform.position = rightController.transform.position;
+                    //ik.solver.rightHandEffector.target.rotation = rightRot * Quaternion.Euler(0f, 190f, 270f);
                 }
             }
             if (player != null)
             {
                 if (player.pda.gameObject.activeSelf)
                 {
-                    ik.solver.leftHandEffector.target = leftController.transform;
+                   // ik.solver.leftHandEffector.target = leftController.transform;
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace VRTweaks.Controls.BasePieces
 			{
 				__instance.PrepareGhostModel();
 				OxygenPipe.ghostModel.gameObject.SetActive(true);
-				OxygenPipe.ghostModel.transform.position = VRHandsController.rightController.transform.right * 2f + VRHandsController.rightController.transform.position;
+				OxygenPipe.ghostModel.transform.position = VRHandsController.rightController.transform.forward * 2f + VRHandsController.rightController.transform.position;
 				OxygenPipe.ghostModel.UpdateGhostAttach();
 				IPipeConnection parent = OxygenPipe.ghostModel.GetParent();
 				if (parent != null)
@@ -40,7 +40,7 @@ namespace VRTweaks.Controls.BasePieces
 				if (hit.collider && hit.collider.gameObject)
 				{
 					bool flag = Player.main.IsInsideWalkable();
-					ghostModel.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(aimTransform.right, hit.normal), hit.normal);
+					ghostModel.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(aimTransform.forward, hit.normal), hit.normal);
 					result = (Constructable.CheckFlags(__instance.allowedInBase, __instance.allowedInSub, __instance.allowedOutside, __instance.allowedUnderwater, aimTransform) && !flag && hit.collider.gameObject.GetComponentInParent<Base>() != null);
 				}
 				__result = result;

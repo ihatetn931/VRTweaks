@@ -29,7 +29,7 @@ namespace VRTweaks.Controls.BasePieces
 				}
 				ConstructableBase componentInParent = __instance.GetComponentInParent<ConstructableBase>();
 				float d = (componentInParent != null) ? componentInParent.placeDefaultDistance : 0f;
-				Base.Face face = new Base.Face(__instance.targetBase.WorldToGrid(camera.position + camera.right * d), direction);
+				Base.Face face = new Base.Face(__instance.targetBase.WorldToGrid(camera.position + camera.forward * d), direction);
 				if (!__instance.targetBase.CanSetModule(ref face, __instance.faceType))
 				{
 					geometryChanged = __instance.SetupInvalid();

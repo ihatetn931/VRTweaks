@@ -21,7 +21,7 @@ namespace VRTweaks.Controls.BasePieces
 				Int3 @int = Base.CellSize[(int)cellType];
 				Vector3 direction = Vector3.Scale((@int - 1).ToVector3(), Base.halfCellSize);
 				Vector3 position = camera.position;
-				Vector3 forward = camera.right;
+				Vector3 forward = camera.forward;
 				float searchDistance = 20f;
 				if (cellType != Base.CellType.Moonpool)
 				{

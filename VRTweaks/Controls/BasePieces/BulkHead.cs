@@ -15,13 +15,13 @@ namespace VRTweaks.Controls.BasePieces
 				Transform aimingTransform = Builder.GetAimTransform();
 				Vector3 position = aimingTransform.position;
 				Vector3 position2 = __instance.frontSideDummy.position;
-				Vector3 forward = __instance.frontSideDummy.right;
+				Vector3 forward = __instance.frontSideDummy.forward;
 				float num = Vector3.Dot(position - position2, forward);
 				if (Mathf.Abs(num) > __instance.sideDistanceThreshold)
 				{
 					return num < 0f;
 				}
-				num = Vector3.Dot(aimingTransform.right, forward);
+				num = Vector3.Dot(aimingTransform.forward, forward);
 				__result = Mathf.Approximately(num, 0f) || num > 0f;
 				return false;
 			}
@@ -47,7 +47,7 @@ namespace VRTweaks.Controls.BasePieces
 					geometryChanged = __instance.SetupInvalid();
 					return false;
 				}
-				Vector3 normal = __instance.targetBase.transform.InverseTransformDirection(camera.right);
+				Vector3 normal = __instance.targetBase.transform.InverseTransformDirection(camera.forward);
 				Base.Face adjacentFace = new Base.Face(__instance.targetBase.WorldToGrid(camera.position), Base.NormalToDirection(normal));
 				if (__instance.IsCorridorConnector(adjacentFace))
 				{

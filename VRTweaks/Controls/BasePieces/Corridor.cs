@@ -16,7 +16,7 @@ namespace VRTweaks.Controls.BasePieces
 				__instance.UpdateRotation(ref geometryChanged);
 				float num = ghostModelParentConstructableBase.placeDefaultDistance;
 				Vector3 position = camera.position;
-				Vector3 forward = camera.right;
+				Vector3 forward = camera.forward;
 				__instance.targetBase = BaseGhost.FindBase(camera, 20f);
 				bool flag;
 				if (__instance.targetBase != null)

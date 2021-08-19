@@ -20,7 +20,7 @@ namespace VRTweaks.Controls.BasePieces
 				}
 				float placeDefaultDistance = ghostModelParentConstructableBase.placeDefaultDistance;
 				Vector3 position = camera.position;
-				Vector3 forward = camera.right;
+				Vector3 forward = camera.forward;
 				Vector3 point = position + forward * placeDefaultDistance;
 				new Int3(1);
 				Int3 @int = __instance.targetBase.WorldToGrid(point);

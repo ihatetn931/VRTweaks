@@ -13,10 +13,10 @@ namespace VRTweaks.Controls
 			normal = Vector3.up;
 			var camera = VRHandsController.rightController;
 			Vector3 position2 = camera.transform.position;
-			int num = UWE.Utils.RaycastIntoSharedBuffer(new Ray(position2, camera.transform.right), maxDist, -2097153, QueryTriggerInteraction.UseGlobal);
+			int num = UWE.Utils.RaycastIntoSharedBuffer(new Ray(position2, camera.transform.forward), maxDist, -2097153, QueryTriggerInteraction.UseGlobal);
 			if (num == 0)
 			{
-				num = UWE.Utils.SpherecastIntoSharedBuffer(position2, 0.7f, camera.transform.right, maxDist, -2097153, QueryTriggerInteraction.UseGlobal);
+				num = UWE.Utils.SpherecastIntoSharedBuffer(position2, 0.7f, camera.transform.forward, maxDist, -2097153, QueryTriggerInteraction.UseGlobal);
 			}
 			closestObj = null;
 			float num2 = 0f;

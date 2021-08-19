@@ -19,7 +19,7 @@ namespace VRTweaks.Controls.BasePieces
 						HandReticle.main.SetTextRaw(HandReticle.TextType.Use, __instance.controlTooltip);
 					}
 					__instance.UpdateLeaks();
-					int num = Physics.RaycastNonAlloc(new Ray(VRHandsController.rightController.transform.position, VRHandsController.rightController.transform.right), __instance.hits, 2.5f);
+					int num = Physics.RaycastNonAlloc(new Ray(VRHandsController.rightController.transform.position, VRHandsController.rightController.transform.forward), __instance.hits, 2.5f);
 					BaseMiniCell baseMiniCell = null;
 					for (int i = 0; i < num; i++)
 					{

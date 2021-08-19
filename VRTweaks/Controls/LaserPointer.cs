@@ -17,9 +17,7 @@ namespace VRTweaks.Controls
 
         public Color color;
         public static float thickness = 0.005f;
-        public AxisType facingAxis = AxisType.XAxis;
         public float length = 2.9f;
-        public bool showCursor = true;
         GameObject holder;
       //  GameObject pointer;
        // public GameObject cursor;
@@ -34,41 +32,38 @@ namespace VRTweaks.Controls
         public static Color colorCyan = new Color(0, 1, 1, 1f);
         public static Color colorBlue = new Color(0, 0, 1, 1f);
         public static Color colorGreen = new Color(0, 1, 0, 1f);
+        public static Color colorHIt = new Color(0, 0.475f, 1, 1);
         public float speed = 1.0f;
 
         void SetPointerTransform(float setLength, float setThicknes, RaycastHit hitPoint)
         {
-            if (facingAxis == AxisType.XAxis)
+
+            if (FPSInputModule.current.lastRaycastResult.gameObject != null)
             {
-                if (showCursor)
+                line.sortingOrder = FPSInputModule.current.lastRaycastResult.sortingOrder;
+                line.sortingLayerID = FPSInputModule.current.lastRaycastResult.sortingLayer;
+                if (FPSInputModule.current.lastRaycastResult.isValid)
                 {
-                    if (FPSInputModule.current.lastRaycastResult.gameObject != null)
+                    Camera eventCamera = FPSInputModule.current.lastRaycastResult.module.eventCamera;
+                    if (eventCamera != null)
                     {
-                        line.sortingOrder = FPSInputModule.current.lastRaycastResult.sortingOrder;
-                        line.sortingLayerID = FPSInputModule.current.lastRaycastResult.sortingLayer;
-                        if (FPSInputModule.current.lastRaycastResult.isValid)
-                        {
-                            Camera eventCamera = FPSInputModule.current.lastRaycastResult.module.eventCamera;
-                            if (eventCamera != null)
-                            {
-                                line.endColor = colorRed;
-                                line.SetPosition(1,  Camera.main.ScreenPointToRay(FPSInputModule.current.lastRaycastResult.screenPosition).GetPoint(FPSInputModule.current.lastRaycastResult.distance));
-                                FPSInputModule.current.lastRaycastResult.Clear();
-                            }
-                            else
-                            {
-                                line.endColor = colorGreen;
-                                line.SetPosition(1, Vector3.MoveTowards(transform.position, FPSInputModule.current.lastRaycastResult.worldPosition, FPSInputModule.current.maxInteractionDistance));
-                                FPSInputModule.current.lastRaycastResult.Clear();
-                            }
-                        }
+                        line.endColor = colorHIt;
+                        line.SetPosition(1, Camera.main.ScreenPointToRay(FPSInputModule.current.lastRaycastResult.screenPosition).GetPoint(FPSInputModule.current.lastRaycastResult.distance));
+                        FPSInputModule.current.lastRaycastResult.Clear();
                     }
                     else
                     {
-                        line.endColor = colorBlue;
-                        line.SetPosition(1, Vector3.MoveTowards(transform.position, hitPoint.point, FPSInputModule.current.maxInteractionDistance));
+                        line.endColor = colorGreen;
+                        line.SetPosition(1, Vector3.MoveTowards(transform.position, FPSInputModule.current.lastRaycastResult.worldPosition, FPSInputModule.current.maxInteractionDistance));
+                        FPSInputModule.current.lastRaycastResult.Clear();
                     }
                 }
+            }
+            else
+            {
+                line.endColor = colorBlue;
+                line.SetPosition(1, Vector3.MoveTowards(transform.position, hitPoint.point, FPSInputModule.current.maxInteractionDistance));
+                FPSInputModule.current.lastRaycastResult.Clear();
             }
         }
 
@@ -93,10 +88,11 @@ namespace VRTweaks.Controls
             line.gameObject.GetComponent<BoxCollider>().isTrigger = true;
             line.gameObject.AddComponent<Rigidbody>().isKinematic = true;
 
-            Ray ray = new Ray(transform.position, transform.right);
+            Ray ray = new Ray(transform.position, transform.forward);
             Physics.Raycast(ray, out RaycastHit result);
             SetPointerTransform(length, thickness, result);
         }
+
         float GetBeamLength(bool bHit, RaycastHit hit)
         {
             float actualLength = length;
@@ -130,14 +126,14 @@ namespace VRTweaks.Controls
         void Update()
         {
             Vector3 aim = new Vector3(-1, 0, 0);
-            Ray raycast = new Ray(transform.position,transform.up );
-            bool rayHit = Physics.Raycast(raycast, out hitObject,LayerID.Trigger);
+            Ray raycast = new Ray(transform.position, transform.forward);
+            bool rayHit = Physics.Raycast(raycast, out hitObject,Inventory.layerMask);
             line.SetPosition(0, transform.position);
             if (rayHit)
             {
                 float beamLength = GetBeamLength(rayHit, hitObject);
-                line.SetPosition(1, Vector3.MoveTowards(transform.position, transform.up, FPSInputModule.current.maxInteractionDistance));
-                //SetPointerTransform(beamLength, thickness, hitObject);
+                //line.SetPosition(1, Vector3.MoveTowards(transform.position, hitObject.point, FPSInputModule.current.maxInteractionDistance));
+                SetPointerTransform(beamLength, thickness, hitObject);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace VRTweaks.Controls.BasePieces
 				Int3 @int = Base.CellSize[8];
 				Vector3 direction = Vector3.Scale((@int - 1).ToVector3(), Base.halfCellSize);
 				Vector3 position = camera.position;
-				Vector3 forward = camera.right;
+				Vector3 forward = camera.forward;
 				__instance.targetBase = BaseGhost.FindBase(camera, 20f);
 				bool flag;
 				if (__instance.targetBase != null)

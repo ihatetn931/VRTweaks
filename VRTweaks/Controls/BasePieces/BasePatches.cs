@@ -13,7 +13,7 @@ namespace VRTweaks.Controls.BasePieces
 			[HarmonyPrefix]
 			static bool Prefix(ref float __result)
 			{
-				float t = Mathf.Clamp01(Vector3.Dot(VRHandsController.rightController.transform.right, Vector3.up));
+				float t = Mathf.Clamp01(Vector3.Dot(VRHandsController.rightController.transform.forward, Vector3.up));
 				__result = Mathf.Lerp(12f, 3f, t);
 				return false;
 			}
@@ -26,7 +26,7 @@ namespace VRTweaks.Controls.BasePieces
 			static bool Prefix(Transform camera, out Base.Face face, ref bool __result, Base __instance)
 			{
 				//Ray ray = new Ray(camera.position, camera.right);
-				Ray ray = __instance.WorldToLocalRay(new Ray(camera.position, camera.right));
+				Ray ray = __instance.WorldToLocalRay(new Ray(camera.position, camera.forward));
 				__result = __instance.RaycastFace(ray, out face);
 				return false;
 			}
@@ -38,7 +38,7 @@ namespace VRTweaks.Controls.BasePieces
 			[HarmonyPrefix]
 			static bool Prefix(Transform camera, Vector3 point, Int3 size, ref Int3 __result, Base __instance)
 			{
-				Ray ray = __instance.WorldToLocalRay(new Ray(camera.position, camera.right));
+				Ray ray = __instance.WorldToLocalRay(new Ray(camera.position, camera.forward));
 				//Ray ray = new Ray(camera.position, camera.right);
 				Int3 @int = size - 1;
 				Vector3 b = Int3.Scale(@int, Base.halfCellSize);

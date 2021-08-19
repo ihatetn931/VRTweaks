@@ -17,7 +17,7 @@ namespace VRTweaks.Controls.Tools
 					Transform aimTransform = Builder.GetAimTransform();
 					RaycastHit raycastHit = default(RaycastHit);
 					bool flag = false;
-					int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, aimTransform.right, 5f, -5, QueryTriggerInteraction.UseGlobal);
+					int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, -aimTransform.forward, 5f, -5, QueryTriggerInteraction.UseGlobal);
 					float num2 = float.PositiveInfinity;
 					for (int i = 0; i < num; i++)
 					{
@@ -29,7 +29,7 @@ namespace VRTweaks.Controls.Tools
 							num2 = raycastHit2.distance;
 						}
 					}
-					Vector3 forward = Vector3.right;
+					Vector3 forward = Vector3.forward;
 					Vector3 up = Vector3.up;
 					Vector3 position;
 					if (flag)
@@ -51,7 +51,7 @@ namespace VRTweaks.Controls.Tools
 						}
 						else
 						{
-							forward = new Vector3(-aimTransform.right.x, 0f, -aimTransform.right.z).normalized;
+							forward = new Vector3(-aimTransform.forward.x, 0f, -aimTransform.forward.z).normalized;
 							up = Vector3.up;
 						}
 						switch (surfaceType)
@@ -69,8 +69,8 @@ namespace VRTweaks.Controls.Tools
 					}
 					else
 					{
-						position = aimTransform.position + aimTransform.right * 1.5f;
-						forward = -aimTransform.right;
+						position = aimTransform.position + -aimTransform.forward * 1.5f;
+						forward = -aimTransform.forward;
 						up = Vector3.up;
 						__instance.validPosition = false;
 					}

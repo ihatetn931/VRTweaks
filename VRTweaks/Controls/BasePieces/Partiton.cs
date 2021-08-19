@@ -27,7 +27,7 @@ namespace VRTweaks.Controls.BasePieces
 				}
 				ConstructableBase componentInParent = __instance.GetComponentInParent<ConstructableBase>();
 				float d = (componentInParent != null) ? componentInParent.placeDefaultDistance : 0f;
-				Vector3 point = camera.position + camera.right * d;
+				Vector3 point = camera.position + camera.forward * d;
 				Vector3 vector = __instance.targetBase.WorldToLocal(point);
 				Int3 @int = __instance.targetBase.LocalToGrid(vector);
 				Vector3 b = __instance.targetBase.GridToLocal(@int);

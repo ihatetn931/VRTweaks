@@ -21,7 +21,7 @@ namespace VRTweaks.Controls.Tools
 				{
 					Bounds aabb = __instance.GetAABB(go);
 					b = go.transform.position - aabb.center;
-					Ray ray = new Ray(aabb.center, camera.transform.right);
+					Ray ray = new Ray(aabb.center, camera.transform.forward);
 					float f = 0f;
 					if (aabb.IntersectRay(ray, out f))
 					{
@@ -29,7 +29,7 @@ namespace VRTweaks.Controls.Tools
 					}
 					__instance.grabbedObjectCenter = aabb.center;
 				}
-				Vector3 position = Vector3.right * (2.5f + num) + __instance.localObjectOffset;
+				Vector3 position = Vector3.forward * (2.5f + num) + __instance.localObjectOffset;
 				__result = camera.transform.TransformPoint(position) + b;
 				return false;
 			}
@@ -81,7 +81,7 @@ namespace VRTweaks.Controls.Tools
 					float d = Mathf.Min(1f, num / 4f);
 					Rigidbody component = __instance.grabbedObject.GetComponent<Rigidbody>();
 					float d2 = 1f + component.mass * __instance.massScalingFactor;
-					Vector3 vector = VRHandsController.rightController.transform.right * __instance.shootForce * d / d2;
+					Vector3 vector = VRHandsController.rightController.transform.forward * __instance.shootForce * d / d2;
 					Vector3 velocity = component.velocity;
 					if (Vector3.Dot(velocity, vector) < 0f)
 					{
@@ -123,7 +123,7 @@ namespace VRTweaks.Controls.Tools
 			{
 				Vector3 position = VRHandsController.rightController.transform.position;//MainCamera.camera.transform.position;
 				int layerMask = ~(1 << LayerMask.NameToLayer("Player"));
-				int num = UWE.Utils.SpherecastIntoSharedBuffer(position, 5.2f, VRHandsController.rightController.transform.right, __instance.pickupDistance, layerMask, QueryTriggerInteraction.UseGlobal);
+				int num = UWE.Utils.SpherecastIntoSharedBuffer(position, 5.2f, VRHandsController.rightController.transform.forward, __instance.pickupDistance, layerMask, QueryTriggerInteraction.UseGlobal);
 				GameObject result = null;
 				float num2 = float.PositiveInfinity;
 				PropulsionCannon.checkedObjects.Clear();

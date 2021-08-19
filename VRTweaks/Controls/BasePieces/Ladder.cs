@@ -14,7 +14,7 @@ namespace VRTweaks.Controls.BasePieces
 				positionFound = false;
 				geometryChanged = false;
 				RaycastHit raycastHit;
-				if (!Physics.Raycast(camera.position, camera.right, out raycastHit, placeMaxDistance, BaseGhost.placeLayerMask.value))
+				if (!Physics.Raycast(camera.position, camera.forward, out raycastHit, placeMaxDistance, BaseGhost.placeLayerMask.value))
 				{
 					geometryChanged = __instance.SetupInvalid();
 					return false;

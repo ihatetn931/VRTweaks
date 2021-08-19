@@ -27,7 +27,7 @@ namespace VRTweaks.Controls.BasePieces
 				}
 				ConstructableBase componentInParent = __instance.GetComponentInParent<ConstructableBase>();
 				float d = (componentInParent != null) ? componentInParent.placeDefaultDistance : 0f;
-				Int3 @int = __instance.targetBase.WorldToGrid(camera.position + camera.right * d);
+				Int3 @int = __instance.targetBase.WorldToGrid(camera.position + camera.forward * d);
 				Base.Direction direction;
 				if (!__instance.targetBase.CanSetPartitionDoor(@int, out direction))
 				{

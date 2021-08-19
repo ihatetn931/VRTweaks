@@ -8,14 +8,12 @@ namespace VRTweaks.Controls
     public static class MotionControlConfig
     {
         public static bool EnableMotionControls;
-        public static bool ToggleDebugControllerBoxes;
     }
 
     class MotionControlMenu
     {
         public static uGUI_OptionsPanel panel;
         public static uGUI_Bindings binding;
-        public static Toggle DebugBoxes;
         public static Toggle AimWithHeadSet;
 
         [HarmonyPatch(typeof(uGUI_OptionsPanel), nameof(uGUI_OptionsPanel.AddTabs))]
@@ -61,7 +59,6 @@ namespace VRTweaks.Controls
             static void Postfix(GameSettings.ISerializer serializer)
             {
                 MotionControlConfig.EnableMotionControls = serializer.Serialize("Controls/ToggleMotionControls", MotionControlConfig.EnableMotionControls);
-                MotionControlConfig.ToggleDebugControllerBoxes = serializer.Serialize("Controls/ToggleDebugControllerBoxes", MotionControlConfig.ToggleDebugControllerBoxes);
                 VROptions.aimRightArmWithHead = serializer.Serialize("Controls/ToggleAimWtihHeadset", VROptions.aimRightArmWithHead);
             }
         }
@@ -74,36 +71,14 @@ namespace VRTweaks.Controls
                 int tabIndex = oPanel.AddTab("MotionControls");
                 oPanel.AddHeading(tabIndex, "Motion Control Settings");
                 oPanel.AddToggleOption(tabIndex, "Toggle Motions Controls", MotionControlConfig.EnableMotionControls, (bool v) => MotionControlConfig.EnableMotionControls = ToggleMotionsControls(v), "Toggle Motion Controls");
-                DebugBoxes = oPanel.AddToggleOption(tabIndex, "Toggle Debug Controller Boxes", MotionControlConfig.ToggleDebugControllerBoxes, (bool v) => MotionControlConfig.ToggleDebugControllerBoxes = ToggleDebugBoxes(v), "Toggles Debug Boxes For Motion Controllers");
-                AimWithHeadSet = oPanel.AddToggleOption(tabIndex, "Toggle Aim With Headset ", VROptions.aimRightArmWithHead, (bool v) => VROptions.aimRightArmWithHead = v, "Toggles Aim With Headset");
+                AimWithHeadSet = oPanel.AddToggleOption(tabIndex, "Toggle Aim With Right Vr Controller ", VROptions.aimRightArmWithHead, (bool v) => VROptions.aimRightArmWithHead = v, "Toggles Aim With Headset");
                 ToggleMotionsControls(MotionControlConfig.EnableMotionControls);
-                ToggleDebugBoxes(MotionControlConfig.ToggleDebugControllerBoxes);
             }
         }
 
         public static bool ToggleMotionsControls(bool value)
         {
-            DebugBoxes.gameObject.SetActive(value);
             AimWithHeadSet.gameObject.SetActive(value);
-            return value;
-        }
-
-        public static bool ToggleDebugBoxes(bool value)
-        {
-            if (value)
-            {
-                if (VRHandsController.rightController != null)
-                    VRHandsController.rightController.gameObject.SetActive(value);
-                if (VRHandsController.leftController != null)
-                    VRHandsController.leftController.gameObject.SetActive(value);
-            }
-            else
-            {
-                if (VRHandsController.rightController != null)
-                    VRHandsController.rightController.gameObject.SetActive(value);
-                if (VRHandsController.leftController != null)
-                    VRHandsController.leftController.gameObject.SetActive(value);
-            }
             return value;
         }
     }

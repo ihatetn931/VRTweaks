@@ -20,7 +20,7 @@ namespace VRTweaks.Controls
 			bool flag = false;
 			Transform transform = Builder.GetAimTransform();// MainCamera.camera.transform;
 			Vector3 position = transform.position;
-			Vector3 forward = transform.right;
+			Vector3 forward = transform.forward;
 			Ray ray = new Ray(position, forward);
 			int layerMask = -2097153;
 			QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Collide;
