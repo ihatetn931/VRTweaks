@@ -165,7 +165,7 @@ namespace VRTweaks
 
                 if (useController)
                 {
-                    if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus")
+                    if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus" && XRSettings.loadedDeviceName != "OpenVR")
                     {
                         Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
                         GameInput.axisValues[2] = vector.x;

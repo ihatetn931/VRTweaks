@@ -2,8 +2,14 @@
   "Id": "VRTweaks",
   "DisplayName": "VRTweaks",
   "Author": "Nova_Max",
-  "Version": "1.1",
+  "Version": "1.1.2",
   "Enable": true,
   "Game": "BelowZero",
+    "NexusId": {
+    "BelowZero": "118"
+  },
+  "VersionChecker": {
+    "LatestVersionURL": "https://raw.githubusercontent.com/MrPurple6411/VRTweaks/master/VRTweaks/mod.json"
+  },
   "AssemblyName": "VRTweaks.dll"
 }
