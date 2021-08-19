@@ -75,7 +75,7 @@ namespace VRTweaks.Controls
         void Start()
         {
             Material newMaterial = new Material(Shader.Find("Sprites/Default"));
-            newMaterial.SetColor(ShaderPropertyID._Color, colorCyan);
+           // newMaterial.SetColor(ShaderPropertyID._Color, colorCyan);
 
             holder = new GameObject();
             holder.transform.parent = this.transform;
@@ -90,7 +90,7 @@ namespace VRTweaks.Controls
             line.material = newMaterial;
             line.startWidth = 0.005f;
             line.endWidth = 0.006f;
-            line.GetComponent<BoxCollider>().isTrigger = true;
+            line.gameObject.GetComponent<BoxCollider>().isTrigger = true;
             line.gameObject.AddComponent<Rigidbody>().isKinematic = true;
 
             Ray ray = new Ray(transform.position, transform.right);
@@ -130,13 +130,14 @@ namespace VRTweaks.Controls
         void Update()
         {
             Vector3 aim = new Vector3(-1, 0, 0);
-            Ray raycast = new Ray(transform.position,transform.right );
-            bool rayHit = Physics.Raycast(raycast, out hitObject,Inventory.layerMask);
+            Ray raycast = new Ray(transform.position,transform.up );
+            bool rayHit = Physics.Raycast(raycast, out hitObject,LayerID.Trigger);
             line.SetPosition(0, transform.position);
             if (rayHit)
             {
                 float beamLength = GetBeamLength(rayHit, hitObject);
-                SetPointerTransform(beamLength, thickness, hitObject);
+                line.SetPosition(1, Vector3.MoveTowards(transform.position, transform.up, FPSInputModule.current.maxInteractionDistance));
+                //SetPointerTransform(beamLength, thickness, hitObject);
             }
         }
     }
