@@ -13,6 +13,7 @@ namespace VRTweaks.SnapTurn
         private static bool _isLookingUpOrDown;
         private static bool _shouldSnapTurn;
         private static bool _shouldIgnoreLookRightOrLeft;
+        private static bool _didClearInput;
 
         [HarmonyPrefix]
         public static bool Prefix(MainCameraControl __instance)
@@ -26,7 +27,8 @@ namespace VRTweaks.SnapTurn
 
             if (_isLookingUpOrDown)
             {
-                return false; //Disable looking up or down with the joystick
+                ClearInput();
+                return true; 
             }
 
             if (_shouldSnapTurn)
@@ -37,10 +39,20 @@ namespace VRTweaks.SnapTurn
 
             if (_shouldIgnoreLookRightOrLeft || SnapTurningOptions.DisableMouseLook)
             {
-                return false;
+                ClearInput();
             }
 
             return true;
+        }
+
+
+        [HarmonyPostfix]
+        public static void Postfix()
+        {
+            if(_didClearInput)
+            {
+                GameInput.clearInput = false;
+            }
         }
 
         private static void UpdateFields()
@@ -76,6 +88,13 @@ namespace VRTweaks.SnapTurn
             }
 
             return newEulerAngles;
+        }
+
+        private static void ClearInput()
+        {
+            //Ignore camera rotation this frame
+            GameInput.ClearInput();
+            _didClearInput = true;
         }
     }
 }
