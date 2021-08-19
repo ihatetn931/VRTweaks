@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace VRTweaks
 {
@@ -12,7 +11,6 @@ namespace VRTweaks
         {
             //Place the bubbles right at about neck level but does not rotate with view
             __instance.anchor.position = new Vector3(0.0f, 1.6f, 0.0f);
-            __instance.anchor.transform.SetParent(Camera.main.transform);
             return true;
         }
     }
