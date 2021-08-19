@@ -9,7 +9,6 @@ using UnityEngine.XR;
 using System.Reflection;
 using UWE;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace VRTweaks
 {
@@ -25,13 +24,14 @@ namespace VRTweaks
             {
                 return;
             }
+
             File.AppendAllText("VRTweaksLog.txt", "Initializing" + Environment.NewLine);
 
             new GameObject("_VRTweaks").AddComponent<VRTweaks>();
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "VRTweaks");
 
             SnapTurningMenu.Patch();
-
+            
             File.AppendAllText("VRTweaksLog.txt", "Done Initializing" + Environment.NewLine);
         }
     }
@@ -60,9 +60,15 @@ namespace VRTweaks
         {
             yield return new WaitForSeconds(1);
             Recenter();
+            bool on = false;
+            if (VROptions.gazeBasedCursor && on == false)
+            {
+                VROptions.gazeBasedCursor = false;
+                on = true;
+            }
             yield break;
         }
-
+        
         internal void Update()
         {
             if (Input.GetKeyDown(KeyCode.T))
@@ -73,13 +79,14 @@ namespace VRTweaks
 
         public static void Recenter()
         {
+
             if (XRSettings.loadedDeviceName == "Oculus")
             {
                 File.AppendAllText("VRTweaksLog.txt", "Recentering Oculus" + Environment.NewLine);
                 OVRManager.display.RecenterPose();
                 return;
             }
-
+            
             if (XRSettings.loadedDeviceName == "OpenVR")
             {
                 File.AppendAllText("VRTweaksLog.txt", "Recentering OpenVR" + Environment.NewLine);

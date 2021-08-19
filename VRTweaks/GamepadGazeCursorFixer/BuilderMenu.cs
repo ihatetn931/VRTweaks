@@ -13,3 +13,4 @@ namespace VRTweaks.GamepadGazeCursorFixer
         }
     }
 }
+
