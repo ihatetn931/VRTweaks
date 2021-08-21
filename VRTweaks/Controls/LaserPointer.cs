@@ -17,15 +17,10 @@ namespace VRTweaks.Controls
 
         public Color color;
         public static float thickness = 0.005f;
-        public float length = 2.9f;
+        public float length = FPSInputModule.current.maxInteractionDistance;
         GameObject holder;
-      //  GameObject pointer;
-       // public GameObject cursor;
-        public GameObject UIcursor;
         public LineRenderer line;
-        public uGUI_InputGroup lastGroup { get; private set; }
         public static RaycastHit hitObject;
-        Vector3 cursorScale = new Vector3(0.02f, 0.02f, 0.02f);
         float contactDistance = 0f;
         Transform contactTarget = null;
         public static Color colorRed = new Color(1, 0, 0, 1f);
@@ -33,7 +28,6 @@ namespace VRTweaks.Controls
         public static Color colorBlue = new Color(0, 0, 1, 1f);
         public static Color colorGreen = new Color(0, 1, 0, 1f);
         public static Color colorHIt = new Color(0, 0.475f, 1, 1);
-        public float speed = 1.0f;
 
         void SetPointerTransform(float setLength, float setThicknes, RaycastHit hitPoint)
         {
@@ -83,8 +77,8 @@ namespace VRTweaks.Controls
             line.startColor = colorCyan;
             line.endColor = colorBlue;
             line.material = newMaterial;
-            line.startWidth = 0.005f;
-            line.endWidth = 0.006f;
+            line.startWidth = 0.004f;
+            line.endWidth = 0.005f;
             line.gameObject.GetComponent<BoxCollider>().isTrigger = true;
             line.gameObject.AddComponent<Rigidbody>().isKinematic = true;
 

@@ -2,6 +2,7 @@
 using HarmonyLib;
 using UnityEngine;
 using UWE;
+using VRTweaks.Controls.Tools;
 
 namespace VRTweaks.Controls.UI
 {
@@ -51,7 +52,7 @@ namespace VRTweaks.Controls.UI
 						}
 					}
 				}
-				if (__instance.player.IsFreeToInteract() && (AvatarInputHandler.main.IsEnabled() || Builder.inputHandlerActive))
+				if (__instance.player.IsFreeToInteract() && (AvatarInputHandler.main.IsEnabled() || BuilderPatches.inputHandlerActive))
 				{
 					string text = string.Empty;
 					InventoryItem heldItem = Inventory.main.quickSlots.heldItem;

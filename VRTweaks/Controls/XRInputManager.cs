@@ -163,33 +163,37 @@ namespace VRTweaks.Controls
 
                 if (useController)
                 {
-                    if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus")
+                    var test = false;
+                    if (test)
                     {
-                        Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
-                        GameInput.axisValues[2] = vector.x;
-                        GameInput.axisValues[3] = -vector.y;
-                        Vector2 vector2 = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.Active);
-                        GameInput.axisValues[0] = vector2.x;
-                        GameInput.axisValues[1] = -vector2.y;
-                        GameInput.axisValues[4] = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger, OVRInput.Controller.Active);
-                        GameInput.axisValues[5] = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger, OVRInput.Controller.Active);
-                        GameInput.axisValues[6] = 0f;
-                        if (OVRInput.Get(OVRInput.RawButton.DpadLeft, OVRInput.Controller.Active))
+                        if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus" && XRSettings.loadedDeviceName != "OpenVR")
                         {
-                            GameInput.axisValues[6] -= 1f;
-                        }
-                        if (OVRInput.Get(OVRInput.RawButton.DpadRight, OVRInput.Controller.Active))
-                        {
-                            GameInput.axisValues[6] += 1f;
-                        }
-                        GameInput.axisValues[7] = 0f;
-                        if (OVRInput.Get(OVRInput.RawButton.DpadUp, OVRInput.Controller.Active))
-                        {
-                            GameInput.axisValues[7] += 1f;
-                        }
-                        if (OVRInput.Get(OVRInput.RawButton.DpadDown, OVRInput.Controller.Active))
-                        {
-                            GameInput.axisValues[7] -= 1f;
+                            Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
+                            GameInput.axisValues[2] = vector.x;
+                            GameInput.axisValues[3] = -vector.y;
+                            Vector2 vector2 = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.Active);
+                            GameInput.axisValues[0] = vector2.x;
+                            GameInput.axisValues[1] = -vector2.y;
+                            GameInput.axisValues[4] = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger, OVRInput.Controller.Active);
+                            GameInput.axisValues[5] = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger, OVRInput.Controller.Active);
+                            GameInput.axisValues[6] = 0f;
+                            if (OVRInput.Get(OVRInput.RawButton.DpadLeft, OVRInput.Controller.Active))
+                            {
+                                GameInput.axisValues[6] -= 1f;
+                            }
+                            if (OVRInput.Get(OVRInput.RawButton.DpadRight, OVRInput.Controller.Active))
+                            {
+                                GameInput.axisValues[6] += 1f;
+                            }
+                            GameInput.axisValues[7] = 0f;
+                            if (OVRInput.Get(OVRInput.RawButton.DpadUp, OVRInput.Controller.Active))
+                            {
+                                GameInput.axisValues[7] += 1f;
+                            }
+                            if (OVRInput.Get(OVRInput.RawButton.DpadDown, OVRInput.Controller.Active))
+                            {
+                                GameInput.axisValues[7] -= 1f;
+                            }
                         }
                     }
                     else
@@ -245,8 +249,10 @@ namespace VRTweaks.Controls
 
                     if (xrInput.hasControllers())
                     {
+
                         if (XRSettings.loadedDeviceName == "Oculus")
                         {
+                            ErrorMessage.AddDebug("LeftChannel: " + OVRHaptics.LeftChannel);
                             Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
                             GameInput.axisValues[2] = vector.x;
                             GameInput.axisValues[3] = -vector.y;
@@ -274,9 +280,8 @@ namespace VRTweaks.Controls
                                 GameInput.axisValues[7] -= 1f;
                             }
                         }
-                        bool test = false;
                         //OpenVR Asix values
-                        if (XRSettings.loadedDeviceName == "OpenVR" && test)
+                        else
                         {
                             Vector2 vector = xrInput.Get(Controller.Left, CommonUsages.primary2DAxis);
                             GameInput.axisValues[2] = vector.x;

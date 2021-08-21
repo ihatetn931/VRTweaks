@@ -144,7 +144,10 @@
     <Compile Include="Controls\Tools\CutterLaser.cs" />
     <Compile Include="Controls\Tools\PlayerPda.cs" />
     <Compile Include="Controls\Tools\ToolBuilder.cs" />
+    <Compile Include="Controls\Tools\ToolPlayer.cs" />
+    <Compile Include="Controls\UI\InputFieldKeyboard.cs" />
     <Compile Include="Controls\UI\HighLight.cs" />
+    <Compile Include="Controls\UI\ModelInputHandler.cs" />
     <Compile Include="Controls\UpdateHands.cs" />
     <Compile Include="Controls\Vehicles\ExoSuitMotionPatch.cs" />
     <Compile Include="Controls\ExpMenu.cs" />
@@ -157,6 +160,7 @@
     <Compile Include="Controls\MainCameraControlPatch.cs" />
     <Compile Include="Controls\UI\FPSInput.cs" />
     <Compile Include="Controls\Vehicles\ExosuitPatches.cs" />
+    <Compile Include="Controls\Vehicles\SeaglidePatches.cs" />
     <Compile Include="Controls\VrControlInputModule.cs" />
     <Compile Include="Controls\VRHandsController.cs" />
     <Compile Include="Controls\XRInputManager.cs" />

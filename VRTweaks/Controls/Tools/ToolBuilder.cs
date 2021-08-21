@@ -7,6 +7,30 @@ namespace VRTweaks.Controls.Tools
 {
     class ToolBuilder
     {
+		[HarmonyPatch(typeof(BuilderTool), nameof(BuilderTool.UpdateCustomUseText))]
+		public static class Builder_GetAimTransform__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(BuilderTool __instance)
+			{
+				if (Builder.isPlacing)
+				{
+					__instance.customUseText = Language.main.GetFormat<string, string>("BuilderWithGhostFormat", uGUI.FormatButton(GameInput.Button.LeftHand, false, " / ", false), uGUI.FormatButton(GameInput.Button.RightHand, false, " / ", false));
+					if (Builder.canRotate)
+					{
+						string format = Language.main.GetFormat<string, string>("GhostRotateInputHint", uGUI.FormatButton(BuilderPatches.buttonRotateCW, true, ", ", false), uGUI.FormatButton(BuilderPatches.buttonRotateCCW, true, ", ", false));
+						__instance.customUseText = string.Format("{0}\n{1}", __instance.customUseText, format);
+						return false;
+					}
+				}
+				else
+				{
+					__instance.customUseText = LanguageCache.GetButtonFormat("BuilderUseFormat", GameInput.Button.RightHand);
+				}
+				return false;
+			}
+		}
+
 		[HarmonyPatch(typeof(BuilderTool), nameof(BuilderTool.HandleInput))]
 		public static class BuilderTool_HandleInput__Patch
 		{

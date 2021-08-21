@@ -17,7 +17,7 @@ namespace VRTweaks.Controls.Tools
 					Transform aimTransform = Builder.GetAimTransform();
 					RaycastHit raycastHit = default(RaycastHit);
 					bool flag = false;
-					int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, -aimTransform.forward, 5f, -5, QueryTriggerInteraction.UseGlobal);
+					int num = UWE.Utils.RaycastIntoSharedBuffer(aimTransform.position, aimTransform.forward, 5f, -5, QueryTriggerInteraction.UseGlobal);
 					float num2 = float.PositiveInfinity;
 					for (int i = 0; i < num; i++)
 					{
@@ -51,7 +51,7 @@ namespace VRTweaks.Controls.Tools
 						}
 						else
 						{
-							forward = new Vector3(-aimTransform.forward.x, 0f, -aimTransform.forward.z).normalized;
+							forward = new Vector3(aimTransform.forward.x, 0f, aimTransform.forward.z).normalized;
 							up = Vector3.up;
 						}
 						switch (surfaceType)
@@ -69,18 +69,26 @@ namespace VRTweaks.Controls.Tools
 					}
 					else
 					{
-						position = aimTransform.position + -aimTransform.forward * 1.5f;
-						forward = -aimTransform.forward;
+						position = aimTransform.position + aimTransform.forward * 1.5f;
+						forward = aimTransform.forward;
 						up = Vector3.up;
 						__instance.validPosition = false;
 					}
-					if (GameInput.GetButtonHeld(Builder.buttonRotateCW))
+					if (GameInput.GetButtonHeldTime(GameInput.Button.Reload) > 0.1f)
 					{
-						__instance.additiveRotation = MathExtensions.RepeatAngle(__instance.additiveRotation - Time.deltaTime * Builder.additiveRotationSpeed);
+						FPSInputModule.current.lockRotation = true;
+						if (GameInput.GetButtonHeld(BuilderPatches.buttonRotateCW) || GameInput.GetButtonDown(BuilderPatches.buttonRotateCW))
+						{
+							__instance.additiveRotation = MathExtensions.RepeatAngle(__instance.additiveRotation - Time.deltaTime * Builder.additiveRotationSpeed);
+						}
+						else if (GameInput.GetButtonHeld(BuilderPatches.buttonRotateCCW) || GameInput.GetButtonDown(BuilderPatches.buttonRotateCCW))
+						{
+							__instance.additiveRotation = MathExtensions.RepeatAngle(__instance.additiveRotation + Time.deltaTime * Builder.additiveRotationSpeed);
+						}
 					}
-					else if (GameInput.GetButtonHeld(Builder.buttonRotateCCW))
-					{
-						__instance.additiveRotation = MathExtensions.RepeatAngle(__instance.additiveRotation + Time.deltaTime * Builder.additiveRotationSpeed);
+					else
+                    {
+						FPSInputModule.current.lockRotation = false;
 					}
 					Quaternion quaternion = Quaternion.LookRotation(forward, up);
 					if (__instance.rotationEnabled)

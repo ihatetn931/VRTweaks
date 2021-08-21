@@ -9,6 +9,7 @@ using UnityEngine.XR;
 using System.Reflection;
 using UWE;
 using System.Collections;
+using VRTweaks.Controls;
 
 namespace VRTweaks
 {
@@ -79,7 +80,6 @@ namespace VRTweaks
 
         public static void Recenter()
         {
-
             if (XRSettings.loadedDeviceName == "Oculus")
             {
                 File.AppendAllText("VRTweaksLog.txt", "Recentering Oculus" + Environment.NewLine);

@@ -40,17 +40,15 @@ namespace VRTweaks.Controls
             if (MotionControlConfig.EnableMotionControls)
             {
                 Time.fixedDeltaTime = (Time.timeScale / XRDevice.refreshRate);
-                //var update = controller.gameObject.AddComponent<UpdateHand>();
-                //ErrorMessage.AddDebug("UpdateHand: " + update);
-                Material newMaterial = new Material(Shader.Find("Sprites/Default"));
-                newMaterial.color = Color.blue;
-                rightController = new GameObject("rightController");
+
                 ik = controller.GetComponent<FullBodyBipedIK>();
                 armsController = controller;
 
+                rightController = new GameObject("rightController");
                 leftController = new GameObject("leftController");
 
-                line = rightController.AddComponent<LaserPointer>();
+                if(line == null)
+                    rightController.AddComponent<LaserPointer>();
                 line = rightController.GetComponent<LaserPointer>();
             }
             rightController.transform.parent = player.camRoot.transform;
@@ -117,24 +115,33 @@ namespace VRTweaks.Controls
             XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 leftPos);
             XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion leftRot);
 
-            leftController.transform.localPosition = leftPos + new Vector3(0f, -0.13f, -0.14f) ;
+            leftController.transform.localPosition = leftPos + new Vector3(0f, -0.13f, -0.14f);
             leftController.transform.localRotation = leftRot * Quaternion.Euler(270f, 90f, 0f);
-
-            if (heldTool != null)
-            {
-                if (heldTool.item != null)
-                {
-                   // line.transform.SetParent(heldTool.item.transform);
-                    ik.solver.rightHandEffector.target.gameObject.transform.position = rightController.transform.position;
-                    //ik.solver.rightHandEffector.target.rotation = rightRot * Quaternion.Euler(0f, 190f, 270f);
-                }
-            }
             if (player != null)
             {
+                if (heldTool != null)
+                {
+                    if (heldTool.item != null)
+                    {
+                      //  ErrorMessage.AddDebug("IKTransform" + ik.solver.rightHandEffector.target.transform);
+                       // ErrorMessage.AddDebug("RightController Transform" + rightController.transform);
+                       // if (ik.solver.rightHandEffector.target.transform != null && rightController.transform != null)
+                       // {
+                           // ik.solver.rightHandEffector.target.transform.position = rightController.transform.position;
+                            //ik.solver.rightHandEffector.target.gameObject.transform.rotation = rightController.transform.rotation *Quaternion.Euler(0f, 190f, 270f);
+                            //ik.solver.rightHandEffector.target.rotation = rightRot * Quaternion.Euler(0f, 190f, 270f);
+                      //  }
+                    }
+                }
                 if (player.pda.gameObject.activeSelf)
                 {
-                   // ik.solver.leftHandEffector.target = leftController.transform;
+                    if (ik.solver.leftHandEffector.target.transform != null && leftController.transform != null)
+                    {
+                        ik.solver.leftHandEffector.target.gameObject.transform.position = leftController.transform.position;
+                        ik.solver.leftHandEffector.target.gameObject.transform.rotation = leftController.transform.rotation;
+                    }
                 }
+
             }
         }
         
@@ -144,7 +151,7 @@ namespace VRTweaks.Controls
             [HarmonyPostfix]
             public static void PostFix(ArmsController __instance)
             {
-                if (!XRSettings.enabled || MotionControlConfig.EnableMotionControls == false)
+                if (!XRSettings.enabled || !MotionControlConfig.EnableMotionControls)
                 {
                     return;
                 }
@@ -158,7 +165,7 @@ namespace VRTweaks.Controls
             [HarmonyPostfix]
             public static void Postfix(ArmsController __instance)
             {
-                if (!XRSettings.enabled || MotionControlConfig.EnableMotionControls == false)
+                if (!XRSettings.enabled || !MotionControlConfig.EnableMotionControls)
                 {
                     return;
                 }

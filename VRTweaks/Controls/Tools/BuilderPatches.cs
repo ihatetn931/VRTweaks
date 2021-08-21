@@ -4,6 +4,7 @@ using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Rendering;
+using VRTweaks.Controls.UI;
 
 namespace VRTweaks.Controls.Tools
 {
@@ -62,27 +63,84 @@ namespace VRTweaks.Controls.Tools
 				return false; 
 			}
 		}
+		private static ModeInputHandler inputHandler = new ModeInputHandler();
+		public static readonly GameInput.Button buttonRotateCW = GameInput.Button.LookRight;
+		public static readonly GameInput.Button buttonRotateCCW = GameInput.Button.LookLeft;
 
-		/*[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
+		public static bool inputHandlerActive
+		{
+			get
+			{
+				return InputHandlerStack.main != null && InputHandlerStack.main.IsFocused(inputHandler);
+			}
+		}
+
+		[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
 		class Builder_UpdateRotation_Patch
 		{
 			[HarmonyPrefix]
 			public static bool Prefix(int max, bool __result)
 			{
-				if (GameInput.GetButtonDown(Builder.buttonRotateCW))
+				if (GameInput.GetButtonHeldTime(GameInput.Button.Reload) > 0.1f)
 				{
-					Builder.lastRotation = (Builder.lastRotation + max - 1) % max;
-					__result = true;
+					FPSInputModule.current.lockRotation = true;
+					if (GameInput.GetButtonDown(buttonRotateCW))
+					{
+						Builder.lastRotation = (Builder.lastRotation + max - 1) % max;
+						__result = true;
+					}
+					if (GameInput.GetButtonDown(buttonRotateCCW))
+					{
+						Builder.lastRotation = (Builder.lastRotation + 1) % max;
+						__result = true;
+					}
 				}
-				if (GameInput.GetButtonDown(Builder.buttonRotateCCW))
+				else
 				{
-					Builder.lastRotation = (Builder.lastRotation + 1) % max;
-					__result = true;
+					FPSInputModule.current.lockRotation = false;
+					__result = false;
 				}
-				__result = false;
 				return false;
 			}
-		}*/
+		}
+
+		[HarmonyPatch(typeof(Builder), nameof(Builder.End))]
+		class Builder_End_Patch
+		{
+			[HarmonyPrefix]
+			public static bool Prefix()
+			{
+				inputHandler.canHandleInput = false;
+				if (Builder.ghostModel != null)
+				{
+					ConstructableBase componentInParent = Builder.ghostModel.GetComponentInParent<ConstructableBase>();
+					if (componentInParent != null)
+					{
+						UnityEngine.Object.Destroy(componentInParent.gameObject);
+					}
+					UnityEngine.Object.Destroy(Builder.ghostModel);
+				}
+				Builder.prefab = null;
+				Builder.ghostModel = null;
+				Builder.canPlace = false;
+				Builder.placementTarget = null;
+				Builder.additiveRotation = 0f;
+				Builder.obstaclesBuffer.Clear();
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(Builder), nameof(Builder.ShowRotationControlsHint))]
+		public static class Builder_ShowRotationControlsHint__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix()
+			{
+				ErrorMessage.AddError(Language.main.GetFormat<string, string>("GhostRotateInputHint", uGUI.FormatButton(buttonRotateCW, 
+					true, "InputSeparator", false), uGUI.FormatButton(buttonRotateCCW, true, "InputSeparator", false)));
+				return false;
+			}
+		}
 
 		[HarmonyPatch(typeof(Builder), nameof(Builder.GetAimTransform))]
 		public static class Builder_GetAimTransform__Patch
@@ -91,6 +149,39 @@ namespace VRTweaks.Controls.Tools
 			static bool Prefix(ref Transform __result)
 			{
 				__result = VRHandsController.rightController.transform;
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(Builder), nameof(Builder.Update))]
+		public static class Builder_Update__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix()
+			{
+				Builder.obstaclesBuffer.Clear();
+				Builder.canPlace = false;
+				if (Builder.prefab == null)
+				{
+					return false;
+				}
+				if (Builder.CreateGhost())
+				{
+					inputHandler.canHandleInput = true;
+					InputHandlerStack.main.Push(inputHandler);
+				}
+				Builder.canPlace = Builder.UpdateAllowed();
+				Transform transform = Builder.ghostModel.transform;
+				transform.position = Builder.placePosition + Builder.placeRotation * Builder.ghostModelPosition;
+				transform.rotation = Builder.placeRotation * Builder.ghostModelRotation;
+				transform.localScale = Builder.ghostModelScale;
+				Color value = Builder.canPlace ? Builder.placeColorAllow : Builder.placeColorDeny;
+				IBuilderGhostModel[] components = Builder.ghostModel.GetComponents<IBuilderGhostModel>();
+				for (int i = 0; i < components.Length; i++)
+				{
+					components[i].UpdateGhostModelColor(Builder.canPlace, ref value);
+				}
+				Builder.ghostStructureMaterial.SetColor(ShaderPropertyID._Tint, value);
 				return false;
 			}
 		}

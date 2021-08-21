@@ -7,6 +7,24 @@ namespace VRTweaks.Controls.BasePieces
 {
     class MapRoomcs
     {
+		[HarmonyPatch(typeof(BaseAddMapRoomGhost), nameof(BaseAddMapRoomGhost.UpdateRotation))]
+		public static class Builder_ShowRotationControlsHint__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(ref bool geometryChanged, BaseAddMapRoomGhost __instance)
+			{
+				if (__instance.cellTypes.Length < 2 || Builder.UpdateRotation(__instance.cellTypes.Length))
+				{
+					return false;
+				}
+				Base.CellType cellType = __instance.GetCellType();
+				__instance.ghostBase.SetCell(Int3.zero, cellType);
+				__instance.RebuildGhostGeometry(true);
+				geometryChanged = true;
+				return false;
+			}
+		}
+
 		[HarmonyPatch(typeof(BaseAddMapRoomGhost), nameof(BaseAddMapRoomGhost.UpdatePlacement))]
 		public static class BaseAddMapRoomGhost_UpdatePlacement__Patch
 		{
