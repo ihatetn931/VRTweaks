@@ -148,7 +148,137 @@ namespace VRTweaks.Controls
             }
             return hasController;
         }
+        //need to work on getting the buttons to stop being reversed on steam vr with oculus headset
+        /*public static KeyCode GetKeyCodeForControllerLayout(KeyCode keyCode, GameInput.ControllerLayout controllerLayout)
+        {
+            if (controllerLayout != GameInput.ControllerLayout.PS4 || Application.platform == RuntimePlatform.PS4 || keyCode < KeyCode.JoystickButton0 || keyCode > KeyCode.Joystick8Button19)
+            {
+                return keyCode;
+            }
+            switch (keyCode)
+            {
+                case KeyCode.JoystickButton0:
+                    return KeyCode.JoystickButton0;
+                case KeyCode.JoystickButton1:
+                    return KeyCode.JoystickButton1;
+                case KeyCode.JoystickButton2:
+                    return KeyCode.JoystickButton2;
+                case KeyCode.JoystickButton3:
+                    return KeyCode.JoystickButton3;
+                case KeyCode.JoystickButton4:
+                    return KeyCode.JoystickButton4;
+                case KeyCode.JoystickButton5:
+                    return KeyCode.JoystickButton5;
+                case KeyCode.JoystickButton6:
+                    return KeyCode.JoystickButton6;
+                case KeyCode.JoystickButton7:
+                    return KeyCode.JoystickButton7;
+                case KeyCode.JoystickButton8:
+                    return KeyCode.JoystickButton8;
+                case KeyCode.JoystickButton9:
+                    return KeyCode.JoystickButton9;
+                case KeyCode.JoystickButton10:
+                    return KeyCode.JoystickButton10;
+                case KeyCode.JoystickButton11:
+                    return KeyCode.JoystickButton11;
+                case KeyCode.JoystickButton12:
+                    return KeyCode.JoystickButton12;
+                case KeyCode.JoystickButton13:
+                    return KeyCode.JoystickButton13;
+                case KeyCode.JoystickButton14:
+                    return KeyCode.JoystickButton14;
+                case KeyCode.JoystickButton15:
+                    return KeyCode.JoystickButton15;
+                case KeyCode.JoystickButton16:
+                    return KeyCode.JoystickButton16;
+                case KeyCode.JoystickButton17:
+                    return KeyCode.JoystickButton17;
+                case KeyCode.JoystickButton18:
+                    return KeyCode.JoystickButton18;
+                case KeyCode.JoystickButton19:
+                    return KeyCode.JoystickButton19;
+                default:
+                    return keyCode;
+            }
+        }
 
+        [HarmonyPatch(typeof(GameInput), nameof(GameInput.UpdateKeyInputs))]
+        internal class UpdateKeyInputsPatch
+        {
+            public static bool Prefix(bool useKeyboard, bool useController, GameInput ___instance)
+            {
+                GameInput.ControllerLayout controllerLayout = GameInput.GetControllerLayout();
+                float unscaledTime = Time.unscaledTime;
+                int num = -1;
+                PlatformServices services = PlatformUtils.main.GetServices();
+                if (services != null)
+                {
+                    num = services.GetActiveController();
+                }
+                for (int i = 0; i < GameInput.inputs.Count; i++)
+                {
+                    GameInput.InputState inputState = default(GameInput.InputState);
+                    inputState.timeDown = GameInput.inputStates[i].timeDown;
+                    GameInput.Device device = GameInput.inputs[i].device;
+                    KeyCode keyCodeForControllerLayout = XRInputManager.GetKeyCodeForControllerLayout(GameInput.inputs[i].keyCode, controllerLayout);
+                    if (keyCodeForControllerLayout != KeyCode.None)
+                    {
+                        KeyCode keyCode = keyCodeForControllerLayout;
+                        if (num >= 1)
+                        {
+                            keyCode = keyCodeForControllerLayout + num * 20;
+                        }
+                        inputState.flags |= ___instance.GetInputState(keyCode);
+                        if (inputState.flags != (GameInput.InputStateFlags)0U && !PlatformUtils.isConsolePlatform && (GameInput.controllerEnabled || device != GameInput.Device.Controller))
+                        {
+                            GameInput.lastDevice = device;
+                        }
+                    }
+                    else
+                    {
+                        bool flag = (GameInput.inputStates[i].flags & GameInput.InputStateFlags.Held) > (GameInput.InputStateFlags)0U;
+                        float num2 = GameInput.axisValues[(int)GameInput.inputs[i].axis];
+                        bool flag2;
+                        if (GameInput.inputs[i].axisPositive)
+                        {
+                            flag2 = (num2 > GameInput.inputs[i].axisDeadZone);
+                        }
+                        else
+                        {
+                            flag2 = (num2 < -GameInput.inputs[i].axisDeadZone);
+                        }
+                        if (flag2)
+                        {
+                            inputState.flags |= GameInput.InputStateFlags.Held;
+                        }
+                        if (flag2 && !flag)
+                        {
+                            inputState.flags |= GameInput.InputStateFlags.Down;
+                        }
+                        if (!flag2 && flag)
+                        {
+                            inputState.flags |= GameInput.InputStateFlags.Up;
+                        }
+                    }
+                    if ((inputState.flags & GameInput.InputStateFlags.Down) != (GameInput.InputStateFlags)0U)
+                    {
+                        GameInput.lastInputPressed[(int)device] = i;
+                        inputState.timeDown = unscaledTime;
+                    }
+                    if ((device == GameInput.Device.Controller && !useController) || (device == GameInput.Device.Keyboard && !useKeyboard))
+                    {
+                        inputState.flags = (GameInput.InputStateFlags)0U;
+                        if ((GameInput.inputStates[i].flags & GameInput.InputStateFlags.Held) > (GameInput.InputStateFlags)0U)
+                        {
+                            inputState.flags |= GameInput.InputStateFlags.Up;
+                        }
+                    }
+                    GameInput.inputStates[i] = inputState;
+                }
+                return false;
+            }
+        }*/
+    
         [HarmonyPatch(typeof(GameInput), "UpdateAxisValues")]
         internal class UpdateAxisValuesPatch
         {
@@ -163,39 +293,37 @@ namespace VRTweaks.Controls
 
                 if (useController)
                 {
-                    var test = false;
-                    if (test)
+
+                    if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus")
                     {
-                        if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus" && XRSettings.loadedDeviceName != "OpenVR")
+                        Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
+                        GameInput.axisValues[2] = vector.x;
+                        GameInput.axisValues[3] = -vector.y;
+                        Vector2 vector2 = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.Active);
+                        GameInput.axisValues[0] = vector2.x;
+                        GameInput.axisValues[1] = -vector2.y;
+                        GameInput.axisValues[4] = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger, OVRInput.Controller.Active);
+                        GameInput.axisValues[5] = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger, OVRInput.Controller.Active);
+                        GameInput.axisValues[6] = 0f;
+                        if (OVRInput.Get(OVRInput.RawButton.DpadLeft, OVRInput.Controller.Active))
                         {
-                            Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
-                            GameInput.axisValues[2] = vector.x;
-                            GameInput.axisValues[3] = -vector.y;
-                            Vector2 vector2 = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.Active);
-                            GameInput.axisValues[0] = vector2.x;
-                            GameInput.axisValues[1] = -vector2.y;
-                            GameInput.axisValues[4] = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger, OVRInput.Controller.Active);
-                            GameInput.axisValues[5] = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger, OVRInput.Controller.Active);
-                            GameInput.axisValues[6] = 0f;
-                            if (OVRInput.Get(OVRInput.RawButton.DpadLeft, OVRInput.Controller.Active))
-                            {
-                                GameInput.axisValues[6] -= 1f;
-                            }
-                            if (OVRInput.Get(OVRInput.RawButton.DpadRight, OVRInput.Controller.Active))
-                            {
-                                GameInput.axisValues[6] += 1f;
-                            }
-                            GameInput.axisValues[7] = 0f;
-                            if (OVRInput.Get(OVRInput.RawButton.DpadUp, OVRInput.Controller.Active))
-                            {
-                                GameInput.axisValues[7] += 1f;
-                            }
-                            if (OVRInput.Get(OVRInput.RawButton.DpadDown, OVRInput.Controller.Active))
-                            {
-                                GameInput.axisValues[7] -= 1f;
-                            }
+                            GameInput.axisValues[6] -= 1f;
+                        }
+                        if (OVRInput.Get(OVRInput.RawButton.DpadRight, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[6] += 1f;
+                        }
+                        GameInput.axisValues[7] = 0f;
+                        if (OVRInput.Get(OVRInput.RawButton.DpadUp, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[7] += 1f;
+                        }
+                        if (OVRInput.Get(OVRInput.RawButton.DpadDown, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[7] -= 1f;
                         }
                     }
+
                     else
                     {
                         GameInput.ControllerLayout controllerLayout = GameInput.GetControllerLayout();
@@ -249,10 +377,8 @@ namespace VRTweaks.Controls
 
                     if (xrInput.hasControllers())
                     {
-
                         if (XRSettings.loadedDeviceName == "Oculus")
                         {
-                            ErrorMessage.AddDebug("LeftChannel: " + OVRHaptics.LeftChannel);
                             Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
                             GameInput.axisValues[2] = vector.x;
                             GameInput.axisValues[3] = -vector.y;
@@ -280,7 +406,6 @@ namespace VRTweaks.Controls
                                 GameInput.axisValues[7] -= 1f;
                             }
                         }
-                        //OpenVR Asix values
                         else
                         {
                             Vector2 vector = xrInput.Get(Controller.Left, CommonUsages.primary2DAxis);

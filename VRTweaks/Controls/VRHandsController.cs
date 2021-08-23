@@ -104,44 +104,47 @@ namespace VRTweaks.Controls
             {
                 VROptions.gazeBasedCursor = true;
             }
-            InventoryItem heldTool = Inventory.main.quickSlots.heldItem;
-            XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rightPos);
-            XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rightRot);
-
-            rightController.transform.localPosition = rightPos;// + new Vector3(0f, 0f, 0f);
-            rightController.transform.localRotation = rightRot;// * Quaternion.Euler(0f, 190f, 270f);
-
-            //Get left controller Position and Rotation
-            XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 leftPos);
-            XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion leftRot);
-
-            leftController.transform.localPosition = leftPos + new Vector3(0f, -0.13f, -0.14f);
-            leftController.transform.localRotation = leftRot * Quaternion.Euler(270f, 90f, 0f);
-            if (player != null)
+            if (!uGUI.main.loading.IsLoading || uGUI.main)
             {
-                if (heldTool != null)
+                InventoryItem heldTool = Inventory.main.quickSlots.heldItem;
+                XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rightPos);
+                XRInputManager.GetXRInputManager().rightController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rightRot);
+
+                rightController.transform.localPosition = rightPos;// + new Vector3(0f, 0f, 0f);
+                rightController.transform.localRotation = rightRot;// * Quaternion.Euler(0f, 190f, 270f);
+
+                //Get left controller Position and Rotation
+                XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 leftPos);
+                XRInputManager.GetXRInputManager().leftController.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion leftRot);
+
+                leftController.transform.localPosition = leftPos + new Vector3(0f, -0.13f, -0.14f);
+                leftController.transform.localRotation = leftRot * Quaternion.Euler(270f, 90f, 0f);
+                if (player != null)
                 {
-                    if (heldTool.item != null)
+                    if (heldTool != null)
                     {
-                      //  ErrorMessage.AddDebug("IKTransform" + ik.solver.rightHandEffector.target.transform);
-                       // ErrorMessage.AddDebug("RightController Transform" + rightController.transform);
-                       // if (ik.solver.rightHandEffector.target.transform != null && rightController.transform != null)
-                       // {
-                           // ik.solver.rightHandEffector.target.transform.position = rightController.transform.position;
+                        if (heldTool.item != null)
+                        {
+                            //  ErrorMessage.AddDebug("IKTransform" + ik.solver.rightHandEffector.target.transform);
+                            // ErrorMessage.AddDebug("RightController Transform" + rightController.transform);
+                            // if (ik.solver.rightHandEffector.target.transform != null && rightController.transform != null)
+                            // {
+                            // ik.solver.rightHandEffector.target.transform.position = rightController.transform.position;
                             //ik.solver.rightHandEffector.target.gameObject.transform.rotation = rightController.transform.rotation *Quaternion.Euler(0f, 190f, 270f);
                             //ik.solver.rightHandEffector.target.rotation = rightRot * Quaternion.Euler(0f, 190f, 270f);
-                      //  }
+                            //  }
+                        }
                     }
-                }
-                if (player.pda.gameObject.activeSelf)
-                {
-                    if (ik.solver.leftHandEffector.target.transform != null && leftController.transform != null)
+                    if (player.pda.gameObject.activeSelf)
                     {
-                        ik.solver.leftHandEffector.target.gameObject.transform.position = leftController.transform.position;
-                        ik.solver.leftHandEffector.target.gameObject.transform.rotation = leftController.transform.rotation;
+                        if (ik.solver.leftHandEffector.target.transform != null && leftController.transform != null)
+                        {
+                            ik.solver.leftHandEffector.target.gameObject.transform.position = leftController.transform.position;
+                            ik.solver.leftHandEffector.target.gameObject.transform.rotation = leftController.transform.rotation;
+                        }
                     }
-                }
 
+                }
             }
         }
         

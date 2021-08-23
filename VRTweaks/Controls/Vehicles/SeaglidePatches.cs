@@ -52,9 +52,12 @@ namespace VRTweaks.Controls.Vehicles
 				}
 				else
 				{
-					if (AvatarInputHandler.main.IsEnabled() && GameInput.GetButtonHeldTime(GameInput.Button.RightHand) >= 0.5f)
+					if (AvatarInputHandler.main.IsEnabled())
 					{
-						__instance.mapActive = !__instance.mapActive;
+						if (GameInput.GetButtonHeldTime(GameInput.Button.RightHand) >= 0.5f)
+						{
+							__instance.mapActive = !__instance.mapActive;
+						}
 					}
 					__instance.mapScript.active = __instance.mapActive;
 				}

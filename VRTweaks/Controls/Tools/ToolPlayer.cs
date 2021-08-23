@@ -3,9 +3,9 @@ using HarmonyLib;
 
 namespace VRTweaks.Controls.Tools
 {
-    class ToolPlayer
+   /* class ToolPlayer
     {
-	/*	[HarmonyPatch(typeof(PlayerTool), nameof(PlayerTool.SetHandIKTargetsEnabled))]
+		[HarmonyPatch(typeof(PlayerTool), nameof(PlayerTool.SetHandIKTargetsEnabled))]
 		public static class FPSInputModuler_ProcessMouseEvent__Patch
 		{
 			[HarmonyPrefix]
@@ -14,7 +14,7 @@ namespace VRTweaks.Controls.Tools
 				if (enabled)
 				{
 					__instance.rightHandIKTarget = __instance.savedRightHandIKTarget;
-					__instance.leftHandIKTarget = __instance.savedLeftHandIKTarget;
+					__instance.leftHandIKTarget =  __instance.savedLeftHandIKTarget;
 
 					__instance.ikAimRightArm = __instance.savedIkAimRightArm;
 					__instance.ikAimLeftArm = __instance.savedIkAimLeftArm;
@@ -32,6 +32,6 @@ namespace VRTweaks.Controls.Tools
 				__instance.forceConfigureIK = true;
 				return false;
 			}
-		}*/
-	}
+		}
+	}*/
 }
