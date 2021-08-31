@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using UnityEngine.XR;
 using VRTweaks.Controls;
 
@@ -24,4 +24,4 @@ public class UpdateHand : MonoBehaviour
             VRHandsController.main.UpdateHandPositions();
         }
     }
-}
+}*/

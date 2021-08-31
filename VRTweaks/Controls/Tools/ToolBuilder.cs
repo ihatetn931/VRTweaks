@@ -1,5 +1,8 @@
 ﻿using FMODUnity;
 using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -18,7 +21,7 @@ namespace VRTweaks.Controls.Tools
 					__instance.customUseText = Language.main.GetFormat<string, string>("BuilderWithGhostFormat", uGUI.FormatButton(GameInput.Button.LeftHand, false, " / ", false), uGUI.FormatButton(GameInput.Button.RightHand, false, " / ", false));
 					if (Builder.canRotate)
 					{
-						string format = Language.main.GetFormat<string, string>("GhostRotateInputHint", uGUI.FormatButton(BuilderPatches.buttonRotateCW, true, ", ", false), uGUI.FormatButton(BuilderPatches.buttonRotateCCW, true, ", ", false));
+						string format = Language.main.GetFormat<string, string>("GhostRotateInputHint", uGUI.FormatButton(GameInput.Button.Reload, true, ", ", false) + uGUI.FormatButton(BuilderPatches.buttonRotateCW, true, ", ", false), uGUI.FormatButton(BuilderPatches.buttonRotateCCW, true, ", ", false));
 						__instance.customUseText = string.Format("{0}\n{1}", __instance.customUseText, format);
 						return false;
 					}
@@ -27,6 +30,63 @@ namespace VRTweaks.Controls.Tools
 				{
 					__instance.customUseText = LanguageCache.GetButtonFormat("BuilderUseFormat", GameInput.Button.RightHand);
 				}
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(BuilderTool), nameof(BuilderTool.OnHover), new Type[] { typeof(BaseDeconstructable) })]
+		public static class Builder_OnHoverBase__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(BaseDeconstructable deconstructable)
+			{
+				HandReticle main = HandReticle.main;
+				string butt = Language.main.GetFormat<string>("DeconstructFormat", uGUI.FormatButton(GameInput.Button.MoveUp, false, " / ", false) + uGUI.FormatButton(GameInput.Button.MoveDown, false, " / ", false));
+				main.SetText(HandReticle.TextType.Hand, deconstructable.Name, true, GameInput.Button.None);
+				main.SetText(HandReticle.TextType.HandSubscript, butt, false, GameInput.Button.None);
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(BuilderTool), nameof(BuilderTool.OnHover), new Type[] { typeof(Constructable)})]
+		public static class Builder_OnHoverConstructable__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(Constructable constructable)
+			{
+				if (constructable.constructed && !constructable.deconstructionAllowed)
+				{
+					return false;
+				}
+				HandReticle main = HandReticle.main;
+				string buttonFormat = LanguageCache.GetButtonFormat("DeconstructFormat", GameInput.Button.Deconstruct);
+				string butt = Language.main.GetFormat<string>("DeconstructFormat", uGUI.FormatButton(GameInput.Button.MoveUp, false, " / ", false) + uGUI.FormatButton(GameInput.Button.MoveDown, false, " / ", false));
+				if (constructable.constructed)
+				{
+					HandReticle.main.SetText(HandReticle.TextType.Hand, Language.main.Get(constructable.techType), false, GameInput.Button.None);
+					HandReticle.main.SetText(HandReticle.TextType.HandSubscript, butt, false, GameInput.Button.None);
+					return false;
+				}
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder.AppendLine(Language.main.GetFormat<string, string>("ConstructDeconstructFormat", LanguageCache.GetButtonFormat("ConstructFormat", GameInput.Button.LeftHand), butt));
+				foreach (KeyValuePair<TechType, int> keyValuePair in constructable.GetRemainingResources())
+				{
+					TechType key = keyValuePair.Key;
+					string text = Language.main.Get(key);
+					int value = keyValuePair.Value;
+					if (value > 1)
+					{
+						stringBuilder.AppendLine(Language.main.GetFormat<string, int>("RequireMultipleFormat", text, value));
+					}
+					else
+					{
+						stringBuilder.AppendLine(text);
+					}
+				}
+				main.SetText(HandReticle.TextType.Hand, Language.main.Get(constructable.techType), false, GameInput.Button.None);
+				main.SetText(HandReticle.TextType.HandSubscript, stringBuilder.ToString(), false, GameInput.Button.None);
+				main.SetProgress(constructable.amount);
+				main.SetIcon(HandReticle.IconType.Progress, 1.5f);
 				return false;
 			}
 		}

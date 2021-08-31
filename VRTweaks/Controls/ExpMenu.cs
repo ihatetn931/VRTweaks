@@ -70,7 +70,7 @@ namespace VRTweaks.Controls
                 panel = oPanel;
                 int tabIndex = oPanel.AddTab("MotionControls");
                 oPanel.AddHeading(tabIndex, "Motion Control Settings");
-                oPanel.AddToggleOption(tabIndex, "Toggle Motions Controls", MotionControlConfig.EnableMotionControls, (bool v) => MotionControlConfig.EnableMotionControls = ToggleMotionsControls(v), "Toggle Motion Controls");
+                oPanel.AddToggleOption(tabIndex, "Toggle Motions Controls", MotionControlConfig.EnableMotionControls, (bool v) => MotionControlConfig.EnableMotionControls = ToggleMotionsControls(v), "Toggle Motion Controls. If you use motion controls, please turn on Toggle Aim With Headset");
                 AimWithHeadSet = oPanel.AddToggleOption(tabIndex, "Toggle Aim With Right Vr Controller ", VROptions.aimRightArmWithHead, (bool v) => VROptions.aimRightArmWithHead = v, "Toggles Aim With Headset");
                 ToggleMotionsControls(MotionControlConfig.EnableMotionControls);
             }

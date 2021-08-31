@@ -19,7 +19,7 @@ namespace VRTweaks.Controls.BasePieces
 			}
 		}
 		
-		[HarmonyPatch(typeof(Base), nameof(Base.PickFace))]
+		/*[HarmonyPatch(typeof(Base), nameof(Base.PickFace))]
 		public static class Base_PickFace__Patch
 		{
 			[HarmonyPrefix]
@@ -80,7 +80,7 @@ namespace VRTweaks.Controls.BasePieces
 				__result = int4;
 				return false;
 			}
-		}
+		}*/
 		
 	}
 }

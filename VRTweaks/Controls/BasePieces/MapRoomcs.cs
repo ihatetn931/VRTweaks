@@ -25,7 +25,7 @@ namespace VRTweaks.Controls.BasePieces
 			}
 		}
 
-		[HarmonyPatch(typeof(BaseAddMapRoomGhost), nameof(BaseAddMapRoomGhost.UpdatePlacement))]
+/*		[HarmonyPatch(typeof(BaseAddMapRoomGhost), nameof(BaseAddMapRoomGhost.UpdatePlacement))]
 		public static class BaseAddMapRoomGhost_UpdatePlacement__Patch
 		{
 			[HarmonyPrefix]
@@ -96,6 +96,6 @@ namespace VRTweaks.Controls.BasePieces
 				__result = flag;
 				return false;
 			}
-		}
+		}*/
 	}
 }

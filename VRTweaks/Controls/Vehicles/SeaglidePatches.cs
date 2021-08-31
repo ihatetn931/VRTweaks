@@ -54,10 +54,10 @@ namespace VRTweaks.Controls.Vehicles
 				{
 					if (AvatarInputHandler.main.IsEnabled())
 					{
-						if (GameInput.GetButtonHeldTime(GameInput.Button.RightHand) >= 0.5f)
+						if (GameInput.GetButtonHeld(GameInput.Button.Jump) && GameInput.GetButtonDown(GameInput.Button.RightHand))
 						{
-							__instance.mapActive = !__instance.mapActive;
-						}
+								__instance.mapActive = !__instance.mapActive;
+						}					
 					}
 					__instance.mapScript.active = __instance.mapActive;
 				}
@@ -76,5 +76,51 @@ namespace VRTweaks.Controls.Vehicles
 				return false;
 			}
 		}
+
+		[HarmonyPatch(typeof(Seaglide), nameof(Seaglide.GetCustomUseText))]
+		public static class Seaglide_GetCustomUseText_Patch
+		{
+			[HarmonyPrefix]
+			public static bool Prefix(ref string __result, Seaglide __instance)
+			{
+				LanguageCache.ButtonText orAddNew = LanguageCache.buttonTextCache.GetOrAddNew("SeaglideMapToolip");
+				var butt = Language.main.GetFormat<string>("SeaglideMapToolip", uGUI.FormatButton(GameInput.Button.Jump, false, " / ", false) + uGUI.FormatButton(GameInput.Button.RightHand, false, " / ", false));
+
+				string buttonFormat = LanguageCache.GetButtonFormat("SeaglideLightsTooltip", GameInput.Button.RightHand);
+				string buttonFormat2 = LanguageCache.GetButtonFormat("SeaglideMapToolip", GameInput.Button.Jump);
+				if (__instance.cachedPrimaryUseText != buttonFormat || __instance.cachedAltUseText != buttonFormat2)
+				{
+					__instance.cachedPrimaryUseText = buttonFormat;
+					__instance.cachedAltUseText = buttonFormat2;
+					__instance.cachedUseText = string.Format("{0}, {1}", buttonFormat, butt);
+				}
+				__result = __instance.cachedUseText;
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(Seaglide), nameof(Seaglide.Update))]
+		public static class Seaglide_Update_Patch
+		{
+			[HarmonyPrefix]
+			public static bool Prefix(Seaglide __instance)
+			{
+				__instance.UpdateActiveState();
+				__instance.UpdatePropeller();
+				__instance.UpdatePropFX();
+				__instance.UpdateUnderwaterState();
+				__instance.UpdateEnergy();
+				if (__instance.usingPlayer != null && __instance.toggleLights != null && !GameInput.GetButtonHeld(GameInput.Button.Jump))
+				{
+					__instance.toggleLights.CheckLightToggle();
+				}
+				if (__instance.activeState)
+				{
+					__instance.engineRPMManager.AccelerateInput(1f);
+				}
+				return false;
+			}
+		}
+
 	}
 }
