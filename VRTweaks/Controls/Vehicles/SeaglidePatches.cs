@@ -122,5 +122,81 @@ namespace VRTweaks.Controls.Vehicles
 			}
 		}
 
+		/*[HarmonyPatch(typeof(Seaglide), nameof(Seaglide.UpdateActiveState))]
+		public static class Seaglide_UpdateActiveState_Patch
+		{
+			[HarmonyPrefix]
+			public static bool Prefix(Seaglide __instance)
+			{
+				bool flag = __instance.activeState;
+				__instance.activeState = false;
+				if (__instance.energyMixin.charge > 0f)
+				{
+					if (__instance.screenEffectModel != null)
+					{
+						__instance.screenEffectModel.SetActive(__instance.usingPlayer != null);
+					}
+					if (__instance.usingPlayer != null && __instance.usingPlayer.IsSwimming())
+					{
+						Vector3 moveDirection1 = GetMoveDirection();
+						__instance.activeState = (moveDirection1.x != 0f || moveDirection1.z != 0f);
+					}
+					if (__instance.powerGlideActive)
+					{
+						__instance.activeState = true;
+					}
+				}
+				if (flag != __instance.activeState)
+				{
+					__instance.SetVFXActive(__instance.activeState);
+				}
+				return false;
+			}
+			public static Vector3 moveDirection;
+
+			public static void UpdateMoveDirection()
+			{
+				float num = 0f;
+				num += GameInput.GetAnalogValueForButton(GameInput.Button.MoveForward);
+				num -= GameInput.GetAnalogValueForButton(GameInput.Button.MoveBackward);
+				float num2 = 0f;
+				num2 -= GameInput.GetAnalogValueForButton(GameInput.Button.MoveLeft);
+				num2 += GameInput.GetAnalogValueForButton(GameInput.Button.MoveRight);
+				float num3 = 0f;
+				num3 += GameInput.GetAnalogValueForButton(GameInput.Button.MoveUp);
+				num3 -= GameInput.GetAnalogValueForButton(GameInput.Button.MoveDown);
+				Vector3 moveDirection1 = VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance;
+				if (GameInput.autoMove && num * num + num2 * num2 > 0.010000001f)
+				{
+					GameInput.autoMove = false;
+				}
+				if (GameInput.autoMove)
+				{
+					moveDirection.Set(0f, moveDirection1.y, 1f);
+				}
+				else
+				{
+					moveDirection.Set(moveDirection1.x, moveDirection1.y, num);
+				}
+				/*if (GameInput.IsPrimaryDeviceGamepad())
+				{
+					if (GameInput.autoMove)
+					{
+						GameInput.isRunningMoveThreshold = false;
+						return;
+					}
+					GameInput.isRunningMoveThreshold = (moveDirection.sqrMagnitude > 0.80999994f);
+					if (!GameInput.isRunningMoveThreshold)
+					{
+						moveDirection /= 0.9f;
+					}
+				}
+			}
+
+			public static Vector3 GetMoveDirection()
+			{
+				return moveDirection;
+			}
+		}*/
 	}
 }

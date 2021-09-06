@@ -142,17 +142,6 @@ namespace VRTweaks.Controls.Tools
 			}
 		}
 
-		[HarmonyPatch(typeof(Builder), nameof(Builder.GetAimTransform))]
-		public static class Builder_GetAimTransform__Patch
-		{
-			[HarmonyPrefix]
-			static bool Prefix(ref Transform __result)
-			{
-				__result = VRHandsController.rightController.transform;
-				return false;
-			}
-		}
-
 		[HarmonyPatch(typeof(Builder), nameof(Builder.Update))]
 		public static class Builder_Update__Patch
 		{
@@ -265,8 +254,19 @@ namespace VRTweaks.Controls.Tools
 			}
 		}
 
+		[HarmonyPatch(typeof(Builder), nameof(Builder.GetAimTransform))]
+		public static class Builder_GetAimTransform__Patch
+		{
+			[HarmonyPrefix]
+			static bool Prefix(ref Transform __result)
+			{
+				__result = VRHandsController.rightController.transform;
+				return false;
+			}
+		}
+
 		[HarmonyPatch(typeof(SNCameraRoot), nameof(SNCameraRoot.GetAimingTransform))]
-		public static class SNCameraRoot_GetAimTransform__Patch
+		public static class SNCameraRoot_GetAimingTransform__Patch
 		{
 			[HarmonyPrefix]
 			static bool Prefix(ref Transform __result)

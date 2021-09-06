@@ -11,7 +11,7 @@ namespace VRTweaks.Controls.Tools
     class ToolBuilder
     {
 		[HarmonyPatch(typeof(BuilderTool), nameof(BuilderTool.UpdateCustomUseText))]
-		public static class Builder_GetAimTransform__Patch
+		public static class BuilderTool_UpdateCustomUseText__Patch
 		{
 			[HarmonyPrefix]
 			static bool Prefix(BuilderTool __instance)

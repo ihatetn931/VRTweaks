@@ -61,12 +61,6 @@ namespace VRTweaks
         {
             yield return new WaitForSeconds(1);
             Recenter();
-            bool on = false;
-            if (VROptions.gazeBasedCursor && on == false)
-            {
-                VROptions.gazeBasedCursor = false;
-                on = true;
-            }
             yield break;
         }
         

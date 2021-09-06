@@ -131,6 +131,7 @@
     <Compile Include="Controls\BasePieces\PartitionDoor.cs" />
     <Compile Include="Controls\BasePieces\Pipe.cs" />
     <Compile Include="Controls\BasePieces\Waterpark.cs" />
+    <Compile Include="Controls\LaserPointerMenu.cs" />
     <Compile Include="Controls\LaserPointer.cs" />
     <Compile Include="Controls\Target.cs" />
     <Compile Include="Controls\Tools\BuilderPatches.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 namespace VRTweaks.Controls.UI
 {
@@ -11,21 +12,20 @@ namespace VRTweaks.Controls.UI
 	public static class FPSInputModuler_ProcessMouseEvent__Patch
 	{
 		[HarmonyPrefix]
-		static bool Prefix(FPSInputModule __instance)
+		static void Prefix(FPSInputModule __instance)
 		{
-			__instance.gameObject.AddComponent<FPSInput>();
+			/*__instance.gameObject.AddComponent<FPSInput>();
 			var test = __instance.GetComponent<FPSInput>();
 			FPSInput.fpsInput = __instance;
 			//ErrorMessage.AddDebug("Test: " + test);;
 			if (test != null)
 			{
 				test.ProcessMouseEvent(__instance);
-			}
+			}*/
 			if (HandReticle.main != null)
 			{
 				HandReticle.main.RequestCrosshairHide();
 			}
-			return false;
 		}
 	}
 
@@ -150,57 +150,57 @@ namespace VRTweaks.Controls.UI
 		public static Vector2 pointerPosition = Vector2.zero;
 		//public static PointerEventData pointerEventData;
 
-	/*	protected override VRInputModule.VRState GetMousePointerEventData()
-		{
-			PointerEventData pointerEventData;
-			base.GetPointerData(-1, out pointerEventData, true);
-			pointerEventData.Reset();
-			Vector2 cursorScreenPosition = FPSInputModule.current.GetCursorScreenPosition();
-			pointerEventData.delta = Vector2.zero;
-			pointerEventData.position = cursorScreenPosition;
-			pointerEventData.scrollDelta = Input.mouseScrollDelta;
-			pointerEventData.button = PointerEventData.InputButton.Left;
-			this.m_RaycastResultCache.Clear();
-			RaycastResult raycastResult = default(RaycastResult);
-			if (this.lastGroup == null || !this.lastGroup.Raycast(pointerEventData, this.m_RaycastResultCache))
+		/*	protected override VRInputModule.VRState GetMousePointerEventData()
 			{
-				base.eventSystem.RaycastAll(pointerEventData, this.m_RaycastResultCache);
-			}
-			this.m_RaycastResultCache.Sort(FPSInputModule.s_RaycastComparer);
-			raycastResult = BaseInputModule.FindFirstRaycast(this.m_RaycastResultCache);
-			raycastResult.screenPosition = cursorScreenPosition;
-			this.m_RaycastResultCache.Clear();
-			if (raycastResult.isValid)
-			{
-				Camera eventCamera = raycastResult.module.eventCamera;
-				if (eventCamera != null)
+				PointerEventData pointerEventData;
+				base.GetPointerData(-1, out pointerEventData, true);
+				pointerEventData.Reset();
+				Vector2 cursorScreenPosition = FPSInputModule.current.GetCursorScreenPosition();
+				pointerEventData.delta = Vector2.zero;
+				pointerEventData.position = cursorScreenPosition;
+				pointerEventData.scrollDelta = Input.mouseScrollDelta;
+				pointerEventData.button = PointerEventData.InputButton.Left;
+				this.m_RaycastResultCache.Clear();
+				RaycastResult raycastResult = default(RaycastResult);
+				if (this.lastGroup == null || !this.lastGroup.Raycast(pointerEventData, this.m_RaycastResultCache))
 				{
-					raycastResult.worldPosition = eventCamera.ScreenPointToRay(raycastResult.screenPosition).GetPoint(raycastResult.distance);
+					base.eventSystem.RaycastAll(pointerEventData, this.m_RaycastResultCache);
 				}
-			}
-			pointerEventData.pointerCurrentRaycast = raycastResult;
-			Vector2 zero = Vector2.zero;
-			if (FPSInputModule.ScreenToCanvasPoint(raycastResult, cursorScreenPosition, ref zero))
-			{
-				pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
-				FPSInputModule.current.pointerPosition = zero;
-				FPSInputModule.current.lastRaycastResult = raycastResult;
-				FPSInputModule.current.lastValidRaycastTime = Time.unscaledTime;
-			}
-			else if (FPSInputModule.ScreenToCanvasPoint(FPSInputModule.current.lastRaycastResult, cursorScreenPosition, ref zero))
-			{
-				pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
-				FPSInputModule.current.pointerPosition = zero;
-				FPSInputModule.current.lastRaycastResult.screenPosition = cursorScreenPosition;
-			}
-			else
-			{
-				FPSInputModule.current.lastRaycastResult = default(RaycastResult);
-			}
-			CursorManager.SetRaycastResult(FPSInputModule.current.lastRaycastResult);
-			FPSInputModule.current.UpdateMouseState(pointerEventData);
-			return this.m_MouseState;
-		}*/
+				this.m_RaycastResultCache.Sort(FPSInputModule.s_RaycastComparer);
+				raycastResult = BaseInputModule.FindFirstRaycast(this.m_RaycastResultCache);
+				raycastResult.screenPosition = cursorScreenPosition;
+				this.m_RaycastResultCache.Clear();
+				if (raycastResult.isValid)
+				{
+					Camera eventCamera = raycastResult.module.eventCamera;
+					if (eventCamera != null)
+					{
+						raycastResult.worldPosition = eventCamera.ScreenPointToRay(raycastResult.screenPosition).GetPoint(raycastResult.distance);
+					}
+				}
+				pointerEventData.pointerCurrentRaycast = raycastResult;
+				Vector2 zero = Vector2.zero;
+				if (FPSInputModule.ScreenToCanvasPoint(raycastResult, cursorScreenPosition, ref zero))
+				{
+					pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
+					FPSInputModule.current.pointerPosition = zero;
+					FPSInputModule.current.lastRaycastResult = raycastResult;
+					FPSInputModule.current.lastValidRaycastTime = Time.unscaledTime;
+				}
+				else if (FPSInputModule.ScreenToCanvasPoint(FPSInputModule.current.lastRaycastResult, cursorScreenPosition, ref zero))
+				{
+					pointerEventData.delta = zero - FPSInputModule.current.pointerPosition;
+					FPSInputModule.current.pointerPosition = zero;
+					FPSInputModule.current.lastRaycastResult.screenPosition = cursorScreenPosition;
+				}
+				else
+				{
+					FPSInputModule.current.lastRaycastResult = default(RaycastResult);
+				}
+				CursorManager.SetRaycastResult(FPSInputModule.current.lastRaycastResult);
+				FPSInputModule.current.UpdateMouseState(pointerEventData);
+				return this.m_MouseState;
+			}*/
 
 		public void ProcessMouseEvent(FPSInputModule inputFPS)
 		{
@@ -257,7 +257,34 @@ namespace VRTweaks.Controls.UI
 				}
 			}
 		}
-	
+
+		[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.Awake))]
+		class FPSInputModule_Awake_Patch
+		{
+			[HarmonyPostfix]
+			public static void PostFix()
+			{
+				if (!XRSettings.enabled || !MotionControlConfig.EnableMotionControls || Player.main != null)
+				{
+					return;
+				}
+				VRHandsController.main.InitializeMenu();
+			}
+		}
+
+		[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.UpdateCursor))]
+		class FPSInputModule_UpdateCursor_Patch
+		{
+			[HarmonyPostfix]
+			public static void Postfix()
+			{
+				if (!XRSettings.enabled || !MotionControlConfig.EnableMotionControls || Player.main != null)
+				{
+					return;
+				}
+				VRHandsController.main.UpdateMenuPositions();
+			}
+		}
 
 		[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.GetCursorScreenPosition))]
 		public static class FPSInputModuler_GetCursorScreenPosition__Patch
@@ -268,8 +295,9 @@ namespace VRTweaks.Controls.UI
 				fpsInput = __instance;
 				if (VROptions.GetUseGazeBasedCursor() || !Input.mousePresent || Cursor.lockState == CursorLockMode.Locked)
 				{
-					if (VRHandsController.rightController != null)
+					if (VRHandsController.rightController != null && FPSInputModule.current != null)
 					{
+
 						//ErrorMessage.AddDebug("Gaze");
 						//result = GraphicsUtil.GetScreenSize() * 0.5f;
 						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance);
@@ -277,7 +305,7 @@ namespace VRTweaks.Controls.UI
 				}
 				else
 				{
-					if (VRHandsController.rightController != null)
+					if (VRHandsController.rightController != null && FPSInputModule.current != null)
 					{
 						//ErrorMessage.AddDebug("NoGaze");
 						result = Camera.main.WorldToScreenPoint(VRHandsController.rightController.transform.position + VRHandsController.rightController.transform.forward * FPSInputModule.current.maxInteractionDistance);//new Vector2(VRHandsController.rightController.transform.position.x, VRHandsController.rightController.transform.position.y);
@@ -507,8 +535,8 @@ namespace VRTweaks.Controls.UI
 			}
 		}
 		public override void Process()
-        {
+		{
 			ErrorMessage.AddDebug("Process");
-        }
-    }
+		}
+	}
 }

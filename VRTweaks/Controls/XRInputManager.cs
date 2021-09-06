@@ -278,7 +278,7 @@ namespace VRTweaks.Controls
                 return false;
             }
         }*/
-    
+
         [HarmonyPatch(typeof(GameInput), "UpdateAxisValues")]
         internal class UpdateAxisValuesPatch
         {
