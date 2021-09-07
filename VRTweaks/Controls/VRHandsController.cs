@@ -149,14 +149,21 @@ namespace VRTweaks.Controls
                     {
                         if (ik.solver != null)
                         {
-                            if(ik.solver.leftHandEffector != null)
+                            if (ik.solver.leftHandEffector != null)
                             {
                                 if (ik.solver.leftHandEffector.target != null)
                                 {
-                                    if (leftController.transform != null)
+
+                                    if (ik.solver.leftHandEffector.target.gameObject != null)
                                     {
-                                        ik.solver.leftHandEffector.target.gameObject.transform.position = leftController.transform.position;
-                                        ik.solver.leftHandEffector.target.gameObject.transform.rotation = leftController.transform.rotation;
+                                        if (ik.solver.leftHandEffector.target.gameObject.transform != null)
+                                        {
+                                            if (leftController.transform != null)
+                                            {
+                                                ik.solver.leftHandEffector.target.gameObject.transform.position = leftController.transform.position;
+                                                ik.solver.leftHandEffector.target.gameObject.transform.rotation = leftController.transform.rotation;
+                                            }
+                                        }
                                     }
                                 }
                             }

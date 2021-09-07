@@ -131,7 +131,7 @@
     <Compile Include="Controls\BasePieces\PartitionDoor.cs" />
     <Compile Include="Controls\BasePieces\Pipe.cs" />
     <Compile Include="Controls\BasePieces\Waterpark.cs" />
-    <Compile Include="Controls\LaserPointerMenu.cs" />
+    <Compile Include="Controls\ControllerLayout.cs" />
     <Compile Include="Controls\LaserPointer.cs" />
     <Compile Include="Controls\Target.cs" />
     <Compile Include="Controls\Tools\BuilderPatches.cs" />
@@ -144,7 +144,7 @@
     <Compile Include="Controls\UI\ModelInputHandler.cs" />
     <Compile Include="Controls\UpdateHands.cs" />
     <Compile Include="Controls\Vehicles\ExoSuitMotionPatch.cs" />
-    <Compile Include="Controls\ExpMenu.cs" />
+    <Compile Include="Controls\VRMenu.cs" />
     <Compile Include="Controls\Tools\Cannon.cs" />
     <Compile Include="Controls\Tools\ToolPlace.cs" />
     <Compile Include="Controls\Tools\WelderPatch.cs" />
@@ -155,7 +155,6 @@
     <Compile Include="Controls\UI\FPSInput.cs" />
     <Compile Include="Controls\Vehicles\ExosuitPatches.cs" />
     <Compile Include="Controls\Vehicles\SeaglidePatches.cs" />
-    <Compile Include="Controls\VrControlInputModule.cs" />
     <Compile Include="Controls\VRHandsController.cs" />
     <Compile Include="Controls\XRInputManager.cs" />
     <Compile Include="GamepadGazeCursorFixer\BuilderMenu.cs" />

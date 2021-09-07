@@ -148,7 +148,7 @@ namespace VRTweaks.Controls
         {
             Vector3 aim = new Vector3(-1, 0, 0);
             Ray raycast = new Ray(transform.position, transform.forward);
-            bool rayHit = Physics.Raycast(raycast, out hitObject, Inventory.layerMask);
+            bool rayHit = Physics.Raycast(raycast, out hitObject, LayerID.TerrainCollider);
             line.SetPosition(0, transform.position);
             if (rayHit)
             {
