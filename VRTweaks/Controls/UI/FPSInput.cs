@@ -1,8 +1,5 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using UnityEngine.XR;
 
 namespace VRTweaks.Controls.UI
@@ -71,6 +68,7 @@ namespace VRTweaks.Controls.UI
 			VRHandsController.main.UpdateMenuPositions();
 		}
 	}
+
 	[HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.GetCursorScreenPosition))]
 	public static class FPSInputModuler_GetCursorScreenPosition__Patch
 	{

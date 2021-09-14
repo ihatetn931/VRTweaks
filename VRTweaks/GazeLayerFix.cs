@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using VRTweaks.Controls;
 
 namespace VRTweaks.Fixes
 {

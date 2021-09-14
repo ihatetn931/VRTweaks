@@ -38,17 +38,20 @@ namespace VRTweaks.Controls
                 if (FPSInputModule.current.lastRaycastResult.isValid)
                 {
                     Camera eventCamera = FPSInputModule.current.lastRaycastResult.module.eventCamera;
-                    if (eventCamera != null)
+                    if (Camera.main != null)
                     {
-                        line.endColor = colorHIt;
-                        line.SetPosition(1, Vector3.MoveTowards(transform.position,Camera.main.ScreenPointToRay(FPSInputModule.current.lastRaycastResult.screenPosition).GetPoint(FPSInputModule.current.lastRaycastResult.distance), FPSInputModule.current.maxInteractionDistance));
-                        FPSInputModule.current.lastRaycastResult.Clear();
-                    }
-                    else
-                    {
-                        line.endColor = colorGreen;
-                        line.SetPosition(1, Vector3.MoveTowards(transform.position, FPSInputModule.current.lastRaycastResult.worldPosition, FPSInputModule.current.maxInteractionDistance));
-                        FPSInputModule.current.lastRaycastResult.Clear();
+                        if (eventCamera != null)
+                        {
+                            line.endColor = colorHIt;
+                            line.SetPosition(1, Vector3.MoveTowards(transform.position, Camera.main.ScreenPointToRay(FPSInputModule.current.lastRaycastResult.screenPosition).GetPoint(FPSInputModule.current.lastRaycastResult.distance), FPSInputModule.current.maxInteractionDistance));
+                            FPSInputModule.current.lastRaycastResult.Clear();
+                        }
+                        else
+                        {
+                            line.endColor = colorGreen;
+                            line.SetPosition(1, Vector3.MoveTowards(transform.position, FPSInputModule.current.lastRaycastResult.worldPosition, FPSInputModule.current.maxInteractionDistance));
+                            FPSInputModule.current.lastRaycastResult.Clear();
+                        }
                     }
                 }
             }
@@ -97,7 +100,6 @@ namespace VRTweaks.Controls
             if (line == null)
                 line = holder.transform.gameObject.AddComponent<LineRenderer>();
             line = holder.transform.gameObject.GetComponent<LineRenderer>();
-
             line.startColor = colorCyan;
             line.endColor = colorBlue;
             line.material = newMaterial;
@@ -105,8 +107,13 @@ namespace VRTweaks.Controls
             line.endWidth = 0.005f;
             if (Player.main != null)
             {
+                if (line.gameObject.GetComponent<BoxCollider>() == null)
+                    line.gameObject.AddComponent<BoxCollider>();
                 line.gameObject.GetComponent<BoxCollider>().isTrigger = true;
-                line.gameObject.AddComponent<Rigidbody>().isKinematic = true;
+
+                if (line.gameObject.GetComponent<Rigidbody>() == null)
+                    line.gameObject.AddComponent<Rigidbody>();
+                line.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             }
 
             Ray ray = new Ray(transform.position, transform.forward);

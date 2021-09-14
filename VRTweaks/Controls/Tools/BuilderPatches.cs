@@ -74,7 +74,7 @@ namespace VRTweaks.Controls.Tools
 				return InputHandlerStack.main != null && InputHandlerStack.main.IsFocused(inputHandler);
 			}
 		}
-
+		
 		[HarmonyPatch(typeof(Builder), nameof(Builder.UpdateRotation))]
 		class Builder_UpdateRotation_Patch
 		{
@@ -129,7 +129,7 @@ namespace VRTweaks.Controls.Tools
 				return false;
 			}
 		}
-
+		
 		[HarmonyPatch(typeof(Builder), nameof(Builder.ShowRotationControlsHint))]
 		public static class Builder_ShowRotationControlsHint__Patch
 		{

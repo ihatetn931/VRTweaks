@@ -9,7 +9,7 @@ using UnityEngine.XR;
 using System.Reflection;
 using UWE;
 using System.Collections;
-using VRTweaks.Controls;
+using System.Collections.Generic;
 
 namespace VRTweaks
 {
@@ -25,14 +25,13 @@ namespace VRTweaks
             {
                 return;
             }
-
             File.AppendAllText("VRTweaksLog.txt", "Initializing" + Environment.NewLine);
 
             new GameObject("_VRTweaks").AddComponent<VRTweaks>();
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "VRTweaks");
 
             SnapTurningMenu.Patch();
-            
+
             File.AppendAllText("VRTweaksLog.txt", "Done Initializing" + Environment.NewLine);
         }
     }
@@ -63,7 +62,7 @@ namespace VRTweaks
             Recenter();
             yield break;
         }
-        
+
         internal void Update()
         {
             if (Input.GetKeyDown(KeyCode.T))
@@ -80,7 +79,7 @@ namespace VRTweaks
                 OVRManager.display.RecenterPose();
                 return;
             }
-            
+
             if (XRSettings.loadedDeviceName == "OpenVR")
             {
                 File.AppendAllText("VRTweaksLog.txt", "Recentering OpenVR" + Environment.NewLine);
