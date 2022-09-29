@@ -4,8 +4,10 @@ using UnityEngine.XR;
 using HarmonyLib;
 using System;
 using Platform.Utils;
+using FMODUnity;
+using UnityEngine.Events;
 
-namespace VRTweaks.Controls
+namespace VRTweaks
 {
     enum Controller
     {
@@ -163,7 +165,7 @@ namespace VRTweaks.Controls
 
                 if (useController)
                 {
-                    if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus" && XRSettings.loadedDeviceName != "OpenVR")
+                    if (GameInput.GetUseOculusInputManager() && XRSettings.loadedDeviceName != "Oculus")
                     {
                         Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
                         GameInput.axisValues[2] = vector.x;

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
+
 namespace VRTweaks
 {
     [HarmonyPatch(typeof(PlayerBreathBubbles), "Start")]
@@ -21,9 +22,8 @@ namespace VRTweaks
         [HarmonyPostfix]
         public static void Postfix(Subtitles __instance)
         {
-            float guiScale = MiscSettings.GetUIScale();
-            __instance.transform.parent.localScale = new Vector3 (guiScale,guiScale,guiScale);
-            __instance.transform.parent.localPosition = new Vector3(-430.0f, +225.0f, 0.0f);
+            __instance.transform.parent.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+            __instance.transform.parent.localPosition = new Vector3(-237.6f, +225.0f, 0.0f);
         }
     }
 }
