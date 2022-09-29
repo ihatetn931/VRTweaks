@@ -3,36 +3,31 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace VRTweaks
 {
-    [HarmonyPatch(typeof(WBOIT))]
-    [HarmonyPatch("CreateRenderTargets")]
+
+    [HarmonyPatch(typeof(WBOIT), nameof(WBOIT.CreateRenderTargets))]
     internal class CreateRenderTargets_Patch
     {
         public static bool Prefix(WBOIT __instance)
         {
-            __instance.wboitTexture1 = new RenderTexture(__instance.camera.pixelWidth, __instance.camera.pixelHeight, 24, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
+            __instance.wboitTexture1 = DynamicResolution.CreateRenderTexture(__instance.camera.pixelWidth, __instance.camera.pixelHeight, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
             __instance.wboitTexture1.name = "WBOIT TexA";
-
-            __instance.wboitTexture2 = new RenderTexture(__instance.camera.pixelWidth, __instance.camera.pixelHeight, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
+            __instance.wboitTexture2 = DynamicResolution.CreateRenderTexture(__instance.camera.pixelWidth, __instance.camera.pixelHeight, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
             __instance.wboitTexture2.name = "WBOIT TexB";
-
+            EditorModifications.SetOITTargets(__instance.camera, __instance.wboitTexture1, __instance.wboitTexture2);
+            WBOIT.renderTargetIdentifiers[0] = BuiltinRenderTextureType.CameraTarget;
+            WBOIT.renderTargetIdentifiers[1] = new RenderTargetIdentifier(__instance.wboitTexture1);
+            WBOIT.renderTargetIdentifiers[2] = new RenderTargetIdentifier(__instance.wboitTexture2);
             __instance.compositeMaterial.SetTexture(__instance.texAPropertyID, __instance.wboitTexture1);
             __instance.compositeMaterial.SetTexture(__instance.texBPropertyID, __instance.wboitTexture2);
-            __instance.colorBuffers = new RenderBuffer[]
-            {
-                __instance.wboitTexture1.colorBuffer,
-                __instance.wboitTexture1.colorBuffer,
-                __instance.wboitTexture2.colorBuffer
-            };
-
             return false;
         }
     }
 
-    [HarmonyPatch(typeof(WBOIT))]
-    [HarmonyPatch(nameof(WBOIT.VerifyRenderTargets))]
+    [HarmonyPatch(typeof(WBOIT), nameof(WBOIT.VerifyRenderTargets))]
     internal class VerifyRenderTargets_Patch
     {
         private static MethodInfo screenGetWidth = AccessTools.Method(typeof(Screen), "get_width");

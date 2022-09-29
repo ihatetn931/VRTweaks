@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <CommonDir>G:\Steam\steamapps\common\</CommonDir>
+    <CommonDir>D:\Steam\steamapps\common\</CommonDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>$(CommonDir)SubnauticaZero\Bepinex\patchers\$(AssemblyName)\</OutputPath>
+    <OutputPath>$(CommonDir)SubnauticaZero\Bepinex\patchers\UWEXRActivation\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,6 +39,9 @@
     <Reference Include="BepInEx">
       <HintPath>$(CommonDir)SubnauticaZero\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\BepInEx\core\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -11,7 +11,7 @@ namespace VRTweaks
         // This patch keeps the camera position aligned on the center of the player body always.
         // A side effect is that it also no longer causes the player body to be clipped at the value
         // it was by default, so looking down you can see the body without clipping.
-        [HarmonyPatch(typeof(MainCameraControl), nameof(MainCameraControl.LateUpdate))]
+        [HarmonyPatch(typeof(MainCameraControl), nameof(MainCameraControl.OnLateUpdate))]
         class CameraForwardPosition_Patch
         {
             static bool Prefix(MainCameraControl __instance)
