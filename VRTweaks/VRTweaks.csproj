@@ -48,7 +48,8 @@
       <HintPath>$(CommonDir)SubnauticaZero\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="FMODUnity">
+    <Reference Include="FMODUnity, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\FMODUnity.dll</HintPath>
     </Reference>
     <Reference Include="PlatformInputDefault">
@@ -72,9 +73,6 @@
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
@@ -90,15 +88,6 @@
     <Reference Include="UnityEngine.InputModule">
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.InputModule.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SubsystemsModule">
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
@@ -135,7 +124,6 @@
     <Compile Include="GamepadGazeCursorFixer\PauseMenu.cs" />
     <Compile Include="GamepadGazeCursorFixer\PDAMenu.cs" />
     <Compile Include="GamepadGazeCursorFixer\Utilities\RaycastFixer.cs" />
-    <Compile Include="GamepadGazeCursorFixer\MainMenuOptionsMenu.cs" />
     <Compile Include="GazeLayerFix.cs" />
     <Compile Include="MiscVrOptions.cs" />
     <Compile Include="PDAPositioning.cs" />
@@ -157,7 +145,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)bin\Debug\VRTweaks.dll" "$(CommonDir)SubnauticaZero\QMods\VRTweaks"</PostBuildEvent>
