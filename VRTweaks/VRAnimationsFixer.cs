@@ -1,10 +1,10 @@
-﻿/*using HarmonyLib;
+﻿using HarmonyLib;
 using UnityEngine;
 
 
 namespace VRTweaks
 {
-    [HarmonyPatch(typeof(GameOptions), "GetVrAnimationMode")]
+    [HarmonyPatch(typeof(VRGameOptions), nameof(VRGameOptions.GetVrAnimationMode))]
     public static class VRAnimationsFixer
     {
         [HarmonyPostfix]
@@ -14,5 +14,5 @@ namespace VRTweaks
             __result = false;
         }
     }
-}*/
+}
 
