@@ -13,10 +13,11 @@ using System.Collections.Generic;
 
 namespace VRTweaks
 {
-
     [QModCore]
     public static class Loader
     {
+        public static float VRHudScale = 0.5f;
+        public static float VRHudWidth = 1050;
         [QModPatch]
         public static void Initialize()
         {
