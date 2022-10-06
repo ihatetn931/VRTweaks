@@ -7,92 +7,32 @@ using VRTweaks;
 
 namespace VRTweaks
 {
-
-	class HUDVROptions
-	{
-
-		static int generalTabIndex = 0;
-
-		[HarmonyPatch(typeof(uGUI_OptionsPanel), nameof(uGUI_OptionsPanel.AddGeneralTab))]
-		class uGUI_OptionsPanel_VROptionsPatch
-		{
-			static void Postfix(uGUI_OptionsPanel __instance)
-			{
-				__instance.AddHeading(generalTabIndex, "VR Hud Options");
-				__instance.AddSliderOption(generalTabIndex, "Hud Scale", Loader.VRHudScale, 0.0001f, 1.0f, 1.0f, 0.0001f, (float scale) =>
-				{
-					Loader.VRHudScale = scale;
-				}
-				, SliderLabelMode.Float, "0.0000");
-
-				__instance.AddSliderOption(generalTabIndex, "Hud Width", Loader.VRHudWidth, 10, 4000f, 1050f, 10f, (float width) =>
-				{
-					Loader.VRHudWidth = width;
-				}
-				, SliderLabelMode.Float, "0000");
-
-
-			}
-
-		}
-
-		[HarmonyPatch(typeof(uGUI_TabbedControlsPanel), nameof(uGUI_TabbedControlsPanel.AddTab))]
-		class uGUI_TabbedControlsPanel_GetGeneralTabPatch
-		{
-			static void Postfix(int __result, string label)
-			{
-				if (label.Equals("General"))
-					generalTabIndex = __result;
-			}
-		}
-
-		[HarmonyPatch(typeof(GameSettings), nameof(GameSettings.SerializeVRSettings))]
-		class GameSettings_SerializeVRSettings_Patch
-		{
-			static void Postfix(GameSettings.ISerializer serializer)
-			{
-				Loader.VRHudScale = serializer.Serialize("VR/VRHUDScale", Loader.VRHudScale);
-				Loader.VRHudWidth = serializer.Serialize("VR/VRHUDWidth", Loader.VRHudWidth);
-			}
-		}
-
-		public static void OnSave(UserStorageUtils.SaveOperation saveOperation)
-		{
-
-			if (saveOperation.result == UserStorageUtils.Result.OutOfSpace && global::PlatformUtils.main.GetServices().GetDisplayOutOfSpaceMessage())
-			{
-				ErrorMessage.AddDebug("You Are Out Of Space");
-			}
-		}
-	}
-    
-
-
     [HarmonyPatch(typeof(uGUI_HealthBar), nameof(uGUI_HealthBar.LateUpdate))]
     public static class HUDFixer
     {
 		[HarmonyPostfix]
 		public static void Postfix(uGUI_HealthBar __instance)
 		{
-			//__instance.transform.parent.localPosition += new Vector3(400, 0, 0);
-			if (GameInput.GetKey(KeyCode.KeypadPlus))
+			if (GameInput.GetKey(KeyCode.Keypad9))
 			{
-				Loader.VRHudScale += 0.0001f;
+				Loader.VRHudScale += 0.01f;
+				Json.SaveHud();
 			}
-			if (GameInput.GetKey(KeyCode.KeypadMinus))
+			if (GameInput.GetKey(KeyCode.Keypad6))
 			{
-				Loader.VRHudScale -= 0.0001f;
+				Loader.VRHudScale -= 0.01f;
+				Json.SaveHud();
 			}
-			if (GameInput.GetKey(KeyCode.KeypadPlus) && GameInput.GetKey(KeyCode.LeftShift) || GameInput.GetKey(KeyCode.RightShift))
-			{
-				Loader.VRHudWidth += 10f;
-			}
-			if (GameInput.GetKey(KeyCode.KeypadMinus) && GameInput.GetKey(KeyCode.LeftShift) || GameInput.GetKey(KeyCode.RightShift))
+			if (GameInput.GetKey(KeyCode.Keypad7))
 			{
 				Loader.VRHudWidth -= 10f;
+				Json.SaveHud();
 			}
-			CoroutineHost.StartCoroutine(GameSettings.SaveAsync(new GameSettings.OnSaveDelegate(HUDVROptions.OnSave)));
-			MiscSettings.SetUIScale(0.5f);
+			if (GameInput.GetKey(KeyCode.Keypad4))
+			{
+				Loader.VRHudWidth += 10f;
+				Json.SaveHud();
+			}
 		}
     }
 
@@ -133,11 +73,11 @@ namespace VRTweaks
 			float num11 = num5 * num7;
 			float num12 = num6 * num7;
 			uGUI_CanvasScaler._uiScale = Loader.VRHudScale;
-			if (__instance._width != num9)
-			{
+			//if (__instance._width != num9)
+			//{
 				__instance._width = num9;
 				__instance.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, __instance._width - Loader.VRHudWidth);
-			}
+			//}
 			if (__instance._height != num10)
 			{
 				__instance._height = num10;

@@ -32,6 +32,7 @@ namespace VRTweaks
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "VRTweaks");
 
             SnapTurningMenu.Patch();
+            Json.LoadHudConfig();
 
             File.AppendAllText("VRTweaksLog.txt", "Done Initializing" + Environment.NewLine);
         }
