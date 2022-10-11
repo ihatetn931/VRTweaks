@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -35,10 +35,6 @@ namespace VRTweaks
         {
             public  float HudWidth { get; set; }
             public  float HudScale { get; set; }
-            public KeyCode scaleKeyUp { get; set; }
-            public KeyCode scaleKeyDown { get; set; }
-            public KeyCode widthKeyUp { get; set; }
-            public KeyCode widthKeyDown { get; set; }
         }
 
 
@@ -54,10 +50,6 @@ namespace VRTweaks
             {
                 HudScale = Loader.VRHudScale,
                 HudWidth = Loader.VRHudWidth,
-                scaleKeyUp = KeyCode.Keypad9,
-                scaleKeyDown = KeyCode.Keypad6,
-                widthKeyUp = KeyCode.Keypad7,
-                widthKeyDown = KeyCode.Keypad4
             };
 
             string json = JsonConvert.SerializeObject(data, settings);
@@ -107,4 +99,4 @@ namespace VRTweaks
             Save();
         }
     }
-}
+}*/

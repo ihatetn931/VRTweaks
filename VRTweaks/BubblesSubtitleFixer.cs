@@ -16,7 +16,7 @@ namespace VRTweaks
         }
     }
 
-    [HarmonyPatch(typeof(Subtitles), "Awake")]
+/*    [HarmonyPatch(typeof(Subtitles), "Awake")]
     public static class SubtitlesFixer
     {
         [HarmonyPostfix]
@@ -25,5 +25,5 @@ namespace VRTweaks
             __instance.transform.parent.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             __instance.transform.parent.localPosition = new Vector3(-237.6f, +225.0f, 0.0f);
         }
-    }
+    }*/
 }

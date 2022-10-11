@@ -166,7 +166,7 @@ namespace VRTweaks
             }
             return hasController;
         }
-        [HarmonyPatch(typeof(GameInput), nameof(GameInput.UpdateAxisValues))]
+       /* [HarmonyPatch(typeof(GameInput), nameof(GameInput.UpdateAxisValues))]
         internal class UpdateAxisValuesPatch
         {
             public static bool Prefix(bool useKeyboard, bool useController, GameInput ___instance)

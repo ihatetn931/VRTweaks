@@ -10,7 +10,7 @@ namespace VRTweaks.Fixes
     {
         public static bool actualGazedBasedCursor;
 
-        [HarmonyPatch(typeof(FPSInputModule), "UpdateCursor")]
+        [HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.UpdateCursor))]
         public static class UpdateCursorPrefix
         {
             [HarmonyPrefix]
@@ -26,7 +26,7 @@ namespace VRTweaks.Fixes
             }
         }
 
-        [HarmonyPatch(typeof(FPSInputModule), "UpdateCursor")]
+        [HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.UpdateCursor))]
         public static class UpdateCursorPostfix
         {
             [HarmonyPostfix]

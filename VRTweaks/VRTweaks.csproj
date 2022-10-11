@@ -58,6 +58,7 @@
     <Reference Include="PlatformInputDefault">
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\PlatformInputDefault.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="QModInstaller">
       <HintPath>$(CommonDir)SubnauticaZero\BepInEx\plugins\QModManager\QModInstaller.dll</HintPath>
     </Reference>
@@ -75,6 +76,9 @@
     <Reference Include="UnityEngine">
       <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -141,7 +145,18 @@
     <Compile Include="SnapTurn\SnapTurning.cs" />
     <Compile Include="HUDFixer.cs" />
     <Compile Include="RecenterVRButtonAdder.cs" />
+    <Compile Include="VREnhancementsBZ\AdditionalVROptions.cs" />
+    <Compile Include="VREnhancementsBZ\AudioFix.cs" />
+    <Compile Include="VREnhancementsBZ\CameraFixes.cs" />
+    <Compile Include="VREnhancementsBZ\CinematicsAnimations.cs" />
+    <Compile Include="VREnhancementsBZ\MainPatcher.cs" />
+    <Compile Include="VREnhancementsBZ\PDAFixes.cs" />
+    <Compile Include="VREnhancementsBZ\UIElementsFixes.cs" />
+    <Compile Include="VREnhancementsBZ\UIFader.cs" />
+    <Compile Include="VREnhancementsBZ\VehicleHUDManager.cs" />
+    <Compile Include="VREnhancementsBZ\VRLoadingScreen.cs" />
     <Compile Include="VRLoadingScreen.cs" />
+    <Compile Include="VROptionsMenu.cs" />
     <Compile Include="WBOITFixes.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +164,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)bin\Debug\VRTweaks.dll" "$(CommonDir)SubnauticaZero\QMods\VRTweaks"</PostBuildEvent>

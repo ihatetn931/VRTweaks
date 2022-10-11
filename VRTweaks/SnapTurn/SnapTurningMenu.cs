@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿/*using HarmonyLib;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -40,5 +40,5 @@ public static class SnapTurningMenu
         SnapTurningOptions.EnableSnapTurning = serializer.Serialize("VR/EnableSnapTurning", SnapTurningOptions.EnableSnapTurning);
         SnapTurningOptions.SnapAngleChoiceIndex = serializer.Serialize("VR/SnapAngleChoiceIndex", SnapTurningOptions.SnapAngleChoiceIndex);
     }
-}
+}*/
 

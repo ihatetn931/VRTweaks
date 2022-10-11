@@ -1,5 +1,5 @@
 ﻿
-using HarmonyLib;
+/*using HarmonyLib;
 using UnityEngine;
 using UnityEngine.XR;
 using UWE;
@@ -7,41 +7,13 @@ using VRTweaks;
 
 namespace VRTweaks
 {
-    [HarmonyPatch(typeof(uGUI_HealthBar), nameof(uGUI_HealthBar.LateUpdate))]
-    public static class HUDFixer
-    {
-		[HarmonyPostfix]
-		public static void Postfix(uGUI_HealthBar __instance)
-		{
-			if (GameInput.GetKey(KeyCode.Keypad9))
-			{
-				Loader.VRHudScale += 0.01f;
-				Json.SaveHud();
-			}
-			if (GameInput.GetKey(KeyCode.Keypad6))
-			{
-				Loader.VRHudScale -= 0.01f;
-				Json.SaveHud();
-			}
-			if (GameInput.GetKey(KeyCode.Keypad7))
-			{
-				Loader.VRHudWidth -= 10f;
-				Json.SaveHud();
-			}
-			if (GameInput.GetKey(KeyCode.Keypad4))
-			{
-				Loader.VRHudWidth += 10f;
-				Json.SaveHud();
-			}
-		}
-    }
 
 	[HarmonyPatch(typeof(uGUI_CanvasScaler), nameof(uGUI_CanvasScaler.UpdateFrustum))]
-    public static class HUDFixer1
-    {
-        [HarmonyPostfix]
-        public static bool Prefix(Camera cam, uGUI_CanvasScaler __instance)
-        {
+	public static class HUDFixer1
+	{
+		[HarmonyPostfix]
+		public static bool Prefix(Camera cam, uGUI_CanvasScaler __instance)
+		{
 			if (__instance.currentMode == uGUI_CanvasScaler.Mode.Inversed && __instance._anchor != null)
 			{
 				return false;
@@ -52,7 +24,7 @@ namespace VRTweaks
 			float num3 = num2 * num;
 			num3 *= 2f;
 			num2 *= 2f;
-			if (XRSettings.enabled)
+			/*if (XRSettings.enabled)
 			{
 				float num4 = 0.1f;
 				num3 *= 1f + num4;
@@ -75,8 +47,8 @@ namespace VRTweaks
 			uGUI_CanvasScaler._uiScale = Loader.VRHudScale;
 			//if (__instance._width != num9)
 			//{
-				__instance._width = num9;
-				__instance.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, __instance._width - Loader.VRHudWidth);
+			__instance._width = num9;
+			__instance.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, __instance._width - Loader.VRHudWidth);
 			//}
 			if (__instance._height != num10)
 			{
@@ -92,5 +64,5 @@ namespace VRTweaks
 			__instance.SetScaleFactor(num7);
 			return false;
 		}
-    }
-}
+	}
+}*/

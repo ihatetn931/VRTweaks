@@ -16,8 +16,11 @@ namespace VRTweaks
         {
             static bool Prefix(MainCameraControl __instance)
             {
-                __instance.cameraUPTransform.localPosition
-                    = new Vector3(__instance.cameraUPTransform.localPosition.x, __instance.cameraUPTransform.localPosition.y, 0f);
+                __instance.cameraUPTransform.localPosition = new Vector3(__instance.cameraUPTransform.localPosition.x, __instance.cameraUPTransform.localPosition.y, 0f);
+                if (!__instance.cinematicMode)
+                {
+                    SNCameraRoot.main.SetNearClip(__instance.animatedNearClipTransform.localPosition.z);
+                }
                 return false;
             }
 
