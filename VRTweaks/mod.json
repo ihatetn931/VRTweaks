@@ -1,8 +1,8 @@
 ﻿{
   "Id": "VRTweaks",
   "DisplayName": "VRTweaks",
-  "Author": "Nova_Max",
-  "Version": "1.1",
+  "Author": "flat2VR",
+  "Version": "2.0.1",
   "Enable": true,
   "Game": "BelowZero",
   "AssemblyName": "VRTweaks.dll"

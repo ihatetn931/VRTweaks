@@ -78,7 +78,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>D:\Steam\steamapps\common\SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>$(CommonDir)SubnauticaZero\SubnauticaZero_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -132,7 +132,6 @@
     <Compile Include="GamepadGazeCursorFixer\PDAMenu.cs" />
     <Compile Include="GamepadGazeCursorFixer\Utilities\RaycastFixer.cs" />
     <Compile Include="GazeLayerFix.cs" />
-    <Compile Include="HudConfig.cs" />
     <Compile Include="MiscVrOptions.cs" />
     <Compile Include="PDAPositioning.cs" />
     <Compile Include="VolumeCloudPatches.cs" />

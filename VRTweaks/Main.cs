@@ -16,8 +16,6 @@ namespace VRTweaks
     [QModCore]
     public static class Loader
     {
-        //public static float VRHudScale = 0.5f;
-        //public static float VRHudWidth = 1050;
         [QModPatch]
         public static void Initialize()
         {
@@ -32,7 +30,6 @@ namespace VRTweaks
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), "VRTweaks");
 
             //SnapTurningMenu.Patch();
-            //Json.LoadHudConfig();
 
             File.AppendAllText("VRTweaksLog.txt", "Done Initializing" + Environment.NewLine);
         }
@@ -40,8 +37,6 @@ namespace VRTweaks
 
     public class VRTweaks : MonoBehaviour
     {
-        //private static VRTweaks s_instance;
-
         public VRTweaks()
         {
             DontDestroyOnLoad(gameObject);
@@ -70,22 +65,6 @@ namespace VRTweaks
             if (Input.GetKeyDown(KeyCode.T))
             {
                 Recenter();
-            }
-            if (GameInput.GetKey(KeyCode.Keypad9))
-            {
-
-            }
-            if (GameInput.GetKey(KeyCode.Keypad6))
-            {
-
-            }
-            if (GameInput.GetKey(KeyCode.Keypad7))
-            {
-
-            }
-            if (GameInput.GetKey(KeyCode.Keypad4))
-            {
-
             }
         }
 
