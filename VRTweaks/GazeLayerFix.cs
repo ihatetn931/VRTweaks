@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿/*using HarmonyLib;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -44,4 +44,4 @@ namespace VRTweaks.Fixes
             }
         }
     }
-}
+}*/

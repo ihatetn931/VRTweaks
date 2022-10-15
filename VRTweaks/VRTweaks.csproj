@@ -156,7 +156,7 @@
     <Compile Include="VREnhancementsBZ\VehicleHUDManager.cs" />
     <Compile Include="VREnhancementsBZ\VRLoadingScreen.cs" />
     <Compile Include="VRLoadingScreen.cs" />
-    <Compile Include="VROptionsMenu.cs" />
+    <Compile Include="VRCustomOptionsMenu.cs" />
     <Compile Include="WBOITFixes.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,23 +7,24 @@ namespace VREnhancementsBZ
     class VehicleHUDManager : MonoBehaviour
     {
         public static GameObject vehicleCanvas;
-        uGUI_CanvasScaler canvasScaler;
-        Transform barsPanel;
-        Transform quickSlots;
-        Transform pinnedReciepes;
-        Transform seatruckSegHealth;
-        Transform ErrorMessages;
+        static uGUI_CanvasScaler canvasScaler;
+        static Transform barsPanel;
+        static Transform quickSlots;
+        static Transform pinnedReciepes;
+        static Transform seatruckSegHealth;
+        static Transform ErrorMessages;
 
-        public static Transform seatruckHUD;
-        public static Transform exosuitHUD;
-        public static Transform hoverbikeHUD;
-        Transform compass;
-        Transform HUDContent;
+        public Transform seatruckHUD;
+        public Transform exosuitHUD;
+        public Transform hoverbikeHUD;
+        static Transform compass;
+        static Transform HUDContent;
 
-        Vector3 seatruckHUDPos = new Vector3(1000, -0, 1000);
+
+        Vector3 seatruckHUDPos = new Vector3(1000, 50, 1000);
         Vector3 seatruckCompassPos = new Vector3(0, 650, 950);
         Vector3 seatruckQuickSlotsPos = new Vector3(0, -800, 1100);
-        Vector3 seatruckBarsPanelPos = new Vector3(-1200, -300, 1000);
+        Vector3 seatruckBarsPanelPos = new Vector3(-1200, -350, 1000);
         Vector3 seatruckPinnedReciepes = new Vector3(1200, 600, 1000);
         Vector3 seatruckSegmentHealthPos = new Vector3(0, 750, 950);
         Vector3 seatruckErrorMessagePos = new Vector3(0, -700, 1100);
@@ -73,14 +74,13 @@ namespace VREnhancementsBZ
             seatruckHUD = HUDContent.Find("Seatruck").transform;
             exosuitHUD = HUDContent.Find("Exosuit").transform;
             hoverbikeHUD = HUDContent.Find("Hoverbike").transform;
-            seatruckSegHealth = HUDContent.Find("Seatruck/Segments").transform;
 
             quickSlots = HUDContent.Find("QuickSlots").transform;
             compass = HUDContent.Find("DepthCompass").transform;
             barsPanel = HUDContent.Find("BarsPanel").transform;
             pinnedReciepes = HUDContent.Find("PinnedRecipes").transform;
             ErrorMessages = HUDContent.Find("HandReticle/UseCanvas").transform;
-            //RearView = HUDContent.Find("Seatruck").transform;
+            seatruckSegHealth = HUDContent.Find("Seatruck/Segments").transform;
 
             seatruckHUD.SetParent(vehicleCanvas.transform, false);//move the vehicle specific HUD elements to the new vehicle Canvas
             seatruckHUD.localPosition = seatruckHUDPos;
@@ -111,6 +111,7 @@ namespace VREnhancementsBZ
                         originalPinnedReciepes = pinnedReciepes.localPosition;
                         orginalErrorMessagePos = ErrorMessages.localPosition;
                         orginalErrorMessageRot = ErrorMessages.rotation;
+
                         //move the elements
                         compass.SetParent(vehicleCanvas.transform, false);
                         quickSlots.SetParent(vehicleCanvas.transform, false);
@@ -118,8 +119,7 @@ namespace VREnhancementsBZ
                         pinnedReciepes.SetParent(vehicleCanvas.transform, false);
                         seatruckSegHealth.SetParent(vehicleCanvas.transform, false);
                         ErrorMessages.SetParent(vehicleCanvas.transform, false);
-                        //RearView.SetParent(vehicleCanvas.transform, false);
-                        //set custom element positions based on vehicle
+;                       //set custom element positions based on vehicle
                         if (player.inSeatruckPilotingChair)
                         {
                             compass.localPosition = seatruckCompassPos;
@@ -169,33 +169,20 @@ namespace VREnhancementsBZ
                         vehicleCanvas.SetActive(true);
                     }
                     //using vehicleCanvas.transform.up to compensate for the rotation done by the canvas scaler in inversed mode.
-                  //  if (player.inSeatruckPilotingChair)
-                        // {
-
-                        seatruckHUD.rotation = Quaternion.LookRotation(seatruckHUD.position, vehicleCanvas.transform.up);
-                    //  }
-                    //  else if (player.inHovercraft)
-                    //  {
+                    seatruckHUD.rotation = Quaternion.LookRotation(seatruckHUD.position, vehicleCanvas.transform.up);
                     hoverbikeHUD.rotation = Quaternion.LookRotation(hoverbikeHUD.position, vehicleCanvas.transform.up);
-                    // }
-                    // else if (player.inExosuit)
-                    //  {
                     exosuitHUD.rotation = Quaternion.LookRotation(exosuitHUD.position, vehicleCanvas.transform.up);
-                    //  }
-                    //  else
-                    //  { 
                     quickSlots.rotation = Quaternion.LookRotation(quickSlots.position, vehicleCanvas.transform.up);
                     compass.rotation = Quaternion.LookRotation(compass.position, vehicleCanvas.transform.up);
                     barsPanel.rotation = Quaternion.LookRotation(barsPanel.position, vehicleCanvas.transform.up);
                     pinnedReciepes.rotation = Quaternion.LookRotation(pinnedReciepes.position, vehicleCanvas.transform.up);
                     seatruckSegHealth.rotation = Quaternion.LookRotation(seatruckSegHealth.position, vehicleCanvas.transform.up);
                     ErrorMessages.rotation = Quaternion.LookRotation(ErrorMessages.position, vehicleCanvas.transform.up);
-                    //  }
 
                 }
                 else if (vehicleCanvas.activeInHierarchy)
                 {
-                    //if not in seamoth or exosuit but vehicleCanvas is active then move elements back to the normal HUD and disable vehicleCanvas
+                    //if not in seatruck, snowfox(hoverbike) or exosuit but vehicleCanvas is active then move elements back to the normal HUD and disable vehicleCanvas
                     compass.SetParent(HUDContent, false);
                     compass.localPosition = originalCompassPos;
 
