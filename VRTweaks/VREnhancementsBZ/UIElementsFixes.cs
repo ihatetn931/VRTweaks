@@ -14,7 +14,7 @@ namespace VREnhancementsBZ
     {
         //static RectTransform CameraCyclopsHUD;
         static RectTransform CameraDroneHUD;
-        static readonly float CameraHUDScaleFactor = 0.75f;
+        //static readonly float CameraHUDScaleFactor = 0.75f;
         static uGUI_SceneHUD sceneHUD;
         static CanvasGroup resTrackerCG;
         static CanvasGroup pingsCG;
@@ -48,6 +48,13 @@ namespace VREnhancementsBZ
                 barsFader.SetAutoFade(enabled);
                 //uGUI_SunbeamCountdown.main.GetComponent<UIFader>().SetAutoFade(enabled);
             }
+            if (VRCustomOptionsMenu.controlPanel != null)
+            {
+                if (enabled)
+                    VRCustomOptionsMenu.controlPanel.gameObject.SetActive(true);
+                else
+                    VRCustomOptionsMenu.controlPanel.gameObject.SetActive(false);
+            }
         }
 
         public static void SetDynamicHUDReciepe(bool enabled)
@@ -70,10 +77,11 @@ namespace VREnhancementsBZ
             uGUI_SunbeamCountdown.main.transform.Find("Background").GetComponent<CanvasRenderer>().SetAlpha(0);//make sure the background remains hidden
             //make the blips and pings more translucent than other hud elements
             if (resTrackerCG)
-                resTrackerCG.alpha = Mathf.Clamp(alpha - 0.2f,0.1f,1);
+                resTrackerCG.alpha = Mathf.Clamp(alpha - 0.2f, 0.1f, 1);
             if (pingsCG)
                 pingsCG.alpha = Mathf.Clamp(alpha - 0.2f, 0.1f, 1);
         }
+
         public static void UpdateHUDDistance(float distance)
         {
             if (sceneHUD)
@@ -90,6 +98,7 @@ namespace VREnhancementsBZ
                 }
             }
         }
+
         public static void UpdateHUDScale(float scale)
         {
             if (sceneHUD)
@@ -97,6 +106,7 @@ namespace VREnhancementsBZ
                 sceneHUD.GetComponent<RectTransform>().localScale = Vector3.one * scale;
             }
         }
+
         public static void UpdateHUDSeparation(float separation)
         {
             if (sceneHUD)
@@ -109,7 +119,7 @@ namespace VREnhancementsBZ
                         safeAreaRect = defaultSafeRect;
                         break;
                     case 1:
-                        safeAreaRect = new Rect(0.3f,0.3f,0.4f,0.3f);
+                        safeAreaRect = new Rect(0.3f, 0.3f, 0.4f, 0.3f);
                         break;
                     case 2:
                         safeAreaRect = new Rect(0.2f, 0.2f, 0.6f, 0.5f);
@@ -130,17 +140,20 @@ namespace VREnhancementsBZ
 
         public static void InitHUD()
         {
+            //if (XRSettings.enabled)
+            // {
             sceneHUD.transform.localPosition = Vector3.zero;//not sure why this isn't zero by default.
-            //uGUI_SunbeamCountdown.main.transform.SetParent(quickSlots.parent, false);//changes parent from ScreenCanvas to HUD/Content
-            //RectTransform holderRect = uGUI_SunbeamCountdown.main.countdownHolder.GetComponent<RectTransform>();
-            // holderRect.anchorMax = holderRect.anchorMin = holderRect.pivot = new Vector2(0.5f, 0.5f);
-            //holderRect.localPosition = Vector3.zero;
-            //RectTransform sbRect = uGUI_SunbeamCountdown.main.GetComponent<RectTransform>();
-            //sbRect.anchorMin = sbRect.anchorMax = new Vector2(0.5f, 0);
+                                                            //uGUI_SunbeamCountdown.main.transform.SetParent(quickSlots.parent, false);//changes parent from ScreenCanvas to HUD/Content
+                                                            //RectTransform holderRect = uGUI_SunbeamCountdown.main.countdownHolder.GetComponent<RectTransform>();
+                                                            // holderRect.anchorMax = holderRect.anchorMin = holderRect.pivot = new Vector2(0.5f, 0.5f);                                                
+                                                            //holderRect.localPosition = Vector3.zero;                                                
+                                                            //RectTransform sbRect = uGUI_SunbeamCountdown.main.GetComponent<RectTransform>();                                                
+                                                            //sbRect.anchorMin = sbRect.anchorMax = new Vector2(0.5f, 0);                                               
 
             UpdateHUDOpacity(VRCustomOptionsMenu.HUD_Alpha);
             UpdateHUDDistance(VRCustomOptionsMenu.HUD_Distance);
-            UpdateHUDScale(VRCustomOptionsMenu.HUD_Scale);
+            //UpdateHUDScale(VRCustomOptionsMenu.HUD_Scale);
+            SetSubtitles();
 
             //UpdateHUDSeparation done in uGUI_SceneLoading.End instead
 
@@ -168,41 +181,58 @@ namespace VREnhancementsBZ
                     reciepeFader.SetAutoFade(VRCustomOptionsMenu.pinnedReciepehud);
 
             }
+            //}
         }
 
-        public static void SetSubtitleHeight(float percentage)
+        public static void SetSubtitles()
         {
             if (subTitles != null)
-                subTitles.localPosition = new Vector3(VRCustomOptionsMenu.subtitleX, percentage, VRCustomOptionsMenu.HUD_Distance);
+            {
+                if (quickSlots != null)
+                {
+                    Vector3 vec = new Vector3(quickSlots.position.x +100, quickSlots.position.y, VRCustomOptionsMenu.HUD_Distance);
+                    //subTitles.localPosition = new Vector3(Screen.width / 4.6f, Screen.height / 3.5f, VRCustomOptionsMenu.HUD_Distance);
+                    subTitles.localPosition = vec;
+                    //   subTitles.localScale = new Vector3(VRCustomOptionsMenu.HUD_Scale, VRCustomOptionsMenu.HUD_Scale, VRCustomOptionsMenu.HUD_Scale);
+                }
+            }
+        }
+
+        /*public static void SetSubtitleHeight(float percentage)
+        {
+            //if (subTitles != null)
+                //subTitles.localPosition = new Vector3(VRCustomOptionsMenu.subtitleHeight, percentage, VRCustomOptionsMenu.HUD_Distance);
         }
 
         public static void SetSubtitleX(float percentage)
         {
-            if (subTitles != null)
-                subTitles.localPosition = new Vector3(percentage, VRCustomOptionsMenu.subtitleHeight, VRCustomOptionsMenu.HUD_Distance);
+            //if (subTitles != null)
+                //subTitles.localPosition = new Vector3(percentage, VRCustomOptionsMenu.subtitleX, VRCustomOptionsMenu.HUD_Distance);
         }
 
         public static void SetSubtitleScale(float scale)
         {
-            if (subTitles != null)
-                subTitles.localScale = new Vector3(scale, scale, scale);
-        }
+            //if (subTitles != null)
+               // subTitles.localScale = new Vector3(scale, scale, scale);
+        }*/
 
         public static void SetTooltipScale(float scale)
         {
             if (toolTip != null)
             {
-                if(toolTip.GetComponent<uGUI_Tooltip>().scaleFactorMax != scale)
-                    toolTip.GetComponent<uGUI_Tooltip>().scaleFactorMax = scale;
+                //toolTip.GetComponent<uGUI_Tooltip>().scaleFactorMax = 0.002f;
+                //ErrorMessage.AddDebug("ScaleMax: " + toolTip.GetComponent<uGUI_Tooltip>().scaleFactorMax);
+                toolTip.GetComponent<uGUI_Tooltip>().scaleFactorMax = scale;
             }
         }
+
 
         public static void UpdateHUDLookAt()
         {
             quickSlots.rotation = Quaternion.LookRotation(quickSlots.position);
             compass.rotation = Quaternion.LookRotation(compass.position);
             barsPanel.rotation = Quaternion.LookRotation(barsPanel.position);
-            reciepe.rotation  = Quaternion.LookRotation(reciepe.position);
+            reciepe.rotation = Quaternion.LookRotation(reciepe.position);
         }
 
         [HarmonyPatch(typeof(Hint), nameof(Hint.Awake))]
@@ -225,7 +255,7 @@ namespace VREnhancementsBZ
                     resTrackerCG = __instance.gameObject.AddComponent<CanvasGroup>();
                     resTrackerCG.alpha = Mathf.Clamp(VRCustomOptionsMenu.HUD_Alpha - 0.2f, 0.1f, 1);
                 }
-                    
+
             }
         }
 
@@ -239,7 +269,7 @@ namespace VREnhancementsBZ
                     pingsCG = __instance.canvasGroup;
                     pingsCG.alpha = Mathf.Clamp(VRCustomOptionsMenu.HUD_Alpha - 0.2f, 0.1f, 1);
                 }
-                    
+
             }
         }
 
@@ -258,33 +288,33 @@ namespace VREnhancementsBZ
             }
         }
 
- /*       //make sure the black overlays always hides the background for all HUD distances
-        [HarmonyPatch(typeof(uGUI_PlayerDeath), nameof(uGUI_PlayerDeath.Start))]
-        class uGUI_PlayerDeath_Start_Patch
-        {
-            static void Postfix(uGUI_PlayerDeath __instance)
-            {
-               // __instance.blackOverlay.gameObject.GetComponent<RectTransform>().localScale = Vector3.one * 2;
-            }
-        }
+        /*       //make sure the black overlays always hides the background for all HUD distances
+               [HarmonyPatch(typeof(uGUI_PlayerDeath), nameof(uGUI_PlayerDeath.Start))]
+               class uGUI_PlayerDeath_Start_Patch
+               {
+                   static void Postfix(uGUI_PlayerDeath __instance)
+                   {
+                      // __instance.blackOverlay.gameObject.GetComponent<RectTransform>().localScale = Vector3.one * 2;
+                   }
+               }
 
-        [HarmonyPatch(typeof(uGUI_PlayerSleep), nameof(uGUI_PlayerSleep.Start))]
-        class uGUI_PlayerSleep_Start_Patch
-        {
-            static void Postfix(uGUI_PlayerSleep __instance)
-            {
-               // __instance.blackOverlay.gameObject.GetComponent<RectTransform>().localScale = Vector3.one * 2;
-            }
-        }
+               [HarmonyPatch(typeof(uGUI_PlayerSleep), nameof(uGUI_PlayerSleep.Start))]
+               class uGUI_PlayerSleep_Start_Patch
+               {
+                   static void Postfix(uGUI_PlayerSleep __instance)
+                   {
+                      // __instance.blackOverlay.gameObject.GetComponent<RectTransform>().localScale = Vector3.one * 2;
+                   }
+               }
 
-        [HarmonyPatch(typeof(uGUI_SceneIntro), nameof(uGUI_SceneIntro.Start))]
-        class uGUI_uGUI_SceneIntro_Start_Patch
-        {
-            static void Postfix(uGUI_SceneIntro __instance)
-            {
-                __instance.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.one * 2000;
-            }
-        }*/
+               [HarmonyPatch(typeof(uGUI_SceneIntro), nameof(uGUI_SceneIntro.Start))]
+               class uGUI_uGUI_SceneIntro_Start_Patch
+               {
+                   static void Postfix(uGUI_SceneIntro __instance)
+                   {
+                       __instance.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.one * 2000;
+                   }
+               }*/
 
         [HarmonyPatch(typeof(Seaglide), nameof(Seaglide.OnDraw))]
         class Seaglide_OnDraw_Patch
@@ -309,7 +339,16 @@ namespace VREnhancementsBZ
             static void Postfix(uGUI __instance)
             {
                 toolTip = __instance.transform.Find("Tooltip");
+                if (VRCustomOptionsMenu.controlPanel != null)
+                {
+                    if (VRCustomOptionsMenu.dynamicHUD)
+                        VRCustomOptionsMenu.controlPanel.gameObject.SetActive(true);
+                    else
+                        VRCustomOptionsMenu.controlPanel.gameObject.SetActive(false);
+                }
                 SetTooltipScale(VRCustomOptionsMenu.toolTipscale);
+                SetSubtitles();
+                // Debug.Log("ToolTipScale: " + VRCustomOptionsMenu.toolTipscale);
             }
         }
 
@@ -409,13 +448,13 @@ namespace VREnhancementsBZ
                     }
                     else
                     {
-                        if(barsFader != null)
+                        if (barsFader != null)
                             barsFader.SetAutoFade(false);
 
-                        if(qsFader != null)
+                        if (qsFader != null)
                             qsFader.SetAutoFade(false);
 
-                        if(reciepeFader != null)
+                        if (reciepeFader != null)
                             reciepeFader.SetAutoFade(false);
                     }
                     //if the PDA is in use turn on look down for hud
@@ -452,7 +491,7 @@ namespace VREnhancementsBZ
             {
                 UIFader qsFader = quickSlots.GetComponent<UIFader>();
                 UIFader reciepeFader = reciepe.GetComponent<UIFader>();
-                if(qsFader && reciepeFader)
+                if (qsFader && reciepeFader)
                 {
                     qsFader.Fade(VRCustomOptionsMenu.HUD_Alpha, 0, 0, true);//make quickslot visible as soon as the slot changes. Using Fade to cancel any running fades.
                     reciepeFader.Fade(VRCustomOptionsMenu.HUD_Alpha, 0, 0, true);
@@ -468,7 +507,7 @@ namespace VREnhancementsBZ
                     }
                     qsFader.SetAutoFade((VRCustomOptionsMenu.dynamicHUD || seaglideEquipped));
                     reciepeFader.SetAutoFade((VRCustomOptionsMenu.pinnedReciepehud || seaglideEquipped));
-                }                
+                }
             }
         }
 
@@ -513,7 +552,7 @@ namespace VREnhancementsBZ
                 //only show the reticle on interactive elements
                 if (newIconType == HandReticle.IconType.Default && !showDefaultReticle && !Player.main.isPiloting)
                 {
-                        newIconType = HandReticle.IconType.None;
+                    newIconType = HandReticle.IconType.None;
                 }
                 return true;
 
@@ -539,7 +578,7 @@ namespace VREnhancementsBZ
                     else if (Player.main.GetMode() == Player.Mode.LockedPiloting)
                     {
                         __instance.SetTargetDistance(VRCustomOptionsMenu.HUD_Distance);
-                   }
+                    }
                 }
                 return true;
             }
@@ -561,7 +600,7 @@ namespace VREnhancementsBZ
                 CameraDroneHUD = __instance.transform.Find("Content/CameraScannerRoom").GetComponent<RectTransform>();
                 if (CameraDroneHUD)
                 {
-                    CameraDroneHUD.localScale = new Vector3(CameraHUDScaleFactor * VRCustomOptionsMenu.HUD_Scale, CameraHUDScaleFactor * VRCustomOptionsMenu.HUD_Scale, 1f);
+                    //CameraDroneHUD.localScale = new Vector3(CameraHUDScaleFactor * VRCustomOptionsMenu.HUD_Scale, CameraHUDScaleFactor * VRCustomOptionsMenu.HUD_Scale, 1f);
                 }
             }
         }
@@ -648,13 +687,13 @@ namespace VREnhancementsBZ
                 if (flag && FPSInputModule.ExtractParams(__instance.lastRaycastResult.gameObject, worldPosition, out vector, out rotation, out localScale, out layer))
                 {
                     cursor.layer = layer;
-                    cursor.transform.position =  worldPosition;
+                    cursor.transform.position = worldPosition;
                     cursor.transform.rotation = rotation;
                     cursor.transform.localScale = localScale;
-                    if ( __instance.cursorGraphic != null)
+                    if (__instance.cursorGraphic != null)
                     {
-                        if(__instance.cursorGraphic.canvas != null)
-                        __instance.cursorGraphic.canvas.sortingLayerID = __instance.lastRaycastResult.sortingLayer;
+                        if (__instance.cursorGraphic.canvas != null)
+                            __instance.cursorGraphic.canvas.sortingLayerID = __instance.lastRaycastResult.sortingLayer;
                         Color color = __instance.cursorGraphic.color;
                         color.a = 1f - Mathf.Clamp01((num3 - num) / num2);
                         __instance.cursorGraphic.color = color;
@@ -668,41 +707,41 @@ namespace VREnhancementsBZ
             }
         }
 
- /*       [HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.UpdateCursor))]
-        class UpdateCursor_Patch
-        {
-            static void Prefix()
-            {
-                //save the original value so we can set it back in the postfix
-                actualGazedBasedCursor = VROptions.gazeBasedCursor;
-                //trying make flag in UpdateCursor be true if Cursor.lockState != CursorLockMode.Locked
-                if (Cursor.lockState != CursorLockMode.Locked)
-                {
-                    //VROptions.gazeBasedCursor = true;
-                }
+        /*       [HarmonyPatch(typeof(FPSInputModule), nameof(FPSInputModule.UpdateCursor))]
+               class UpdateCursor_Patch
+               {
+                   static void Prefix()
+                   {
+                       //save the original value so we can set it back in the postfix
+                       actualGazedBasedCursor = VROptions.gazeBasedCursor;
+                       //trying make flag in UpdateCursor be true if Cursor.lockState != CursorLockMode.Locked
+                       if (Cursor.lockState != CursorLockMode.Locked)
+                       {
+                           //VROptions.gazeBasedCursor = true;
+                       }
 
-            }
-            static void Postfix(FPSInputModule __instance)
-            {
-                VROptions.gazeBasedCursor = actualGazedBasedCursor;
-                //Fix the problem with the cursor rendering behind UI elements.
-                Canvas cursorCanvas = __instance._cursor.GetComponentInChildren<Graphic>().canvas;
-                //RaycastResult lastRaycastResult = Traverse.Create(__instance).Field("lastRaycastResult").GetValue<RaycastResult>();
-                if (cursorCanvas && __instance.lastRaycastResult.isValid)
-                {
-                    cursorCanvas.sortingLayerID = __instance.lastRaycastResult.sortingLayer;//put the cursor on the same layer as whatever was hit by the cursor raycast.
-                }
-                //change the VR cursor to look like the default hand reticle cursor for better accuracy when selecting smaller ui elements
-                //TODO: Find a way to not do this every frame.
-                if (__instance._cursor && HandReticle_Start_Patch.defaultReticle)
-                {
-                    __instance._cursor.GetComponentInChildren<Image>().overrideSprite = HandReticle_Start_Patch.defaultReticle;
-                    if (__instance._cursor.transform.localScale.x > 0.002f)
-                        __instance._cursor.transform.localScale = Vector3.one * 0.002f;
-                }
+                   }
+                   static void Postfix(FPSInputModule __instance)
+                   {
+                       VROptions.gazeBasedCursor = actualGazedBasedCursor;
+                       //Fix the problem with the cursor rendering behind UI elements.
+                       Canvas cursorCanvas = __instance._cursor.GetComponentInChildren<Graphic>().canvas;
+                       //RaycastResult lastRaycastResult = Traverse.Create(__instance).Field("lastRaycastResult").GetValue<RaycastResult>();
+                       if (cursorCanvas && __instance.lastRaycastResult.isValid)
+                       {
+                           cursorCanvas.sortingLayerID = __instance.lastRaycastResult.sortingLayer;//put the cursor on the same layer as whatever was hit by the cursor raycast.
+                       }
+                       //change the VR cursor to look like the default hand reticle cursor for better accuracy when selecting smaller ui elements
+                       //TODO: Find a way to not do this every frame.
+                       if (__instance._cursor && HandReticle_Start_Patch.defaultReticle)
+                       {
+                           __instance._cursor.GetComponentInChildren<Image>().overrideSprite = HandReticle_Start_Patch.defaultReticle;
+                           if (__instance._cursor.transform.localScale.x > 0.002f)
+                               __instance._cursor.transform.localScale = Vector3.one * 0.002f;
+                       }
 
-            }
-        }*/
+                   }
+               }*/
 
         static Transform screenCanvas;
         static Transform overlayCanvas;
@@ -720,7 +759,7 @@ namespace VREnhancementsBZ
                 overlayCanvas = GameObject.Find("OverlayCanvas").transform;
 
                 __instance.canvasScaler.enabled = false;//disabling the canvas scaler to prevent it from messing up the custom distance and scale
-                __instance.transform.position = new Vector3(mainMenuUICam.transform.position.x + menuDistance,-0.8f,0);
+                __instance.transform.position = new Vector3(mainMenuUICam.transform.position.x + menuDistance, -0.8f, 0);
                 __instance.transform.localScale = Vector3.one * menuScale * 2f;
                 __instance.gameObject.GetComponent<Canvas>().scaleFactor = 1.25f;//sharpen text
                 VRTweaks.VRTweaks.Recenter();
@@ -782,7 +821,7 @@ namespace VREnhancementsBZ
             {
                 uGUI_CanvasScaler canvasScaler = __instance.gameObject.GetComponent<uGUI_CanvasScaler>();
                 canvasScaler.distance = menuDistance;
-                __instance.transform.localScale = Vector3.one * menuScale *2;
+                __instance.transform.localScale = Vector3.one * menuScale * 2;
                 __instance.gameObject.GetComponent<Canvas>().scaleFactor = 1.5f;//sharpen text
                 return true;
             }
@@ -801,21 +840,21 @@ namespace VREnhancementsBZ
             }
         }
 
-/*        [HarmonyPatch(typeof(uGUI_BuildWatermark), nameof(uGUI_BuildWatermark.UpdateText))]
-        class BWM_UpdateText_Patch
-        {
-            static bool Prefix(uGUI_BuildWatermark __instance)
-            {
-                //make the version watermark more visible
-                string plasticChangeSetOfBuild = SNUtils.GetPlasticChangeSetOfBuild();
-                DateTime dateTimeOfBuild = SNUtils.GetDateTimeOfBuild();
-                __instance.text.text = Language.main.GetFormat<DateTime, string>("EarlyAccessWatermarkFormat", dateTimeOfBuild, plasticChangeSetOfBuild);
-                __instance.text.color = new Vector4(1,1,1,1.0f);
-                __instance.transform.localPosition = new Vector3(950, 450, 0);
-                return false;
+        /*        [HarmonyPatch(typeof(uGUI_BuildWatermark), nameof(uGUI_BuildWatermark.UpdateText))]
+                class BWM_UpdateText_Patch
+                {
+                    static bool Prefix(uGUI_BuildWatermark __instance)
+                    {
+                        //make the version watermark more visible
+                        string plasticChangeSetOfBuild = SNUtils.GetPlasticChangeSetOfBuild();
+                        DateTime dateTimeOfBuild = SNUtils.GetDateTimeOfBuild();
+                        __instance.text.text = Language.main.GetFormat<DateTime, string>("EarlyAccessWatermarkFormat", dateTimeOfBuild, plasticChangeSetOfBuild);
+                        __instance.text.color = new Vector4(1,1,1,1.0f);
+                        __instance.transform.localPosition = new Vector3(950, 450, 0);
+                        return false;
 
-            }
-        }*/
+                    }
+                }*/
 
         [HarmonyPatch(typeof(uGUI_CanvasScaler), nameof(uGUI_CanvasScaler.SetScaleFactor))]
         class Canvas_ScaleFactor_Patch
@@ -844,7 +883,7 @@ namespace VREnhancementsBZ
         class Canvas_UpdateFrustum_Patch
         {
             //doing this to maintain the original canvas scale after changing the canvas scaler distance
-            static float customDistance=1;
+            static float customDistance = 1;
             static bool Prefix(uGUI_CanvasScaler __instance)
             {
                 if (__instance.gameObject.name == "ScreenCanvas")

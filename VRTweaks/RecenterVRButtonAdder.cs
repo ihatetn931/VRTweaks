@@ -2,6 +2,7 @@
 using HarmonyLib;
 using System.Linq;
 using TMPro;
+using UnityEngine.XR;
 
 // The method in this class was copied from IWhoI's VREnhancements mod for the original Subnautica
 // https://github.com/IWhoI/SubnauticaVREnhancements/blob/master/VREnhancements/MainPatcher.cs
@@ -15,7 +16,7 @@ public static class RecenterVRButtonAdder
     public static void Postfix(IngameMenu __instance)
     {        
         //code copied from the quit to desktop mod and modified
-        if (__instance != null && recenterVRButton == null)
+        if (__instance != null && recenterVRButton == null && XRSettings.loadedDeviceName != "Oculus")
         {
             //I think this is copying an existing button
             Button menuButton = __instance.quitToMainMenuButton.transform.parent.GetChild(0).gameObject.GetComponent<Button>();

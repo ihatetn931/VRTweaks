@@ -72,8 +72,9 @@ namespace VRTweaks
         {
             if (XRSettings.loadedDeviceName == "Oculus")
             {
-                File.AppendAllText("VRTweaksLog.txt", "Recentering Oculus" + Environment.NewLine);
-                OVRManager.display.RecenterPose();
+               // File.AppendAllText("VRTweaksLog.txt", "Recentering Oculus" + Environment.NewLine);
+                //OVRManager.display.RecenterPose();
+                // VRUtil.Recenter();
                 return;
             }
 

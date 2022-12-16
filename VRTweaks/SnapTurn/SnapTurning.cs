@@ -22,7 +22,6 @@ namespace VRTweaks.SnapTurn
             {
                 return true; //Enter vanilla method
             }
-
             UpdateFields();
 
             if (_isLookingUpOrDown)

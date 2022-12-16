@@ -166,7 +166,7 @@ namespace VRTweaks
             }
             return hasController;
         }
-       /* [HarmonyPatch(typeof(GameInput), nameof(GameInput.UpdateAxisValues))]
+        [HarmonyPatch(typeof(GameInput), nameof(GameInput.UpdateAxisValues))]
         internal class UpdateAxisValuesPatch
         {
             public static bool Prefix(bool useKeyboard, bool useController, GameInput ___instance)
@@ -177,9 +177,59 @@ namespace VRTweaks
                 {
                     GameInput.axisValues[i] = 0f;
                 }
-                if (useController)
+                if (VRCustomOptionsMenu.UseVrControllerSticks)
                 {
-                  //  ErrorMessage.AddDebug("OculusInput: " + GameInput.GetUseOculusInputManager());
+
+                   /* if (XRSettings.loadedDeviceName == "Oculus")
+                    {
+                        Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
+                        GameInput.axisValues[2] = vector.x;
+                        GameInput.axisValues[3] = -vector.y;
+                        Vector2 vector2 = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick, OVRInput.Controller.Active);
+                        GameInput.axisValues[0] = vector2.x;
+                        GameInput.axisValues[1] = -vector2.y;
+                        // TODO: Use deadzone?
+                        GameInput.axisValues[4] = OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger, OVRInput.Controller.Active);
+                        GameInput.axisValues[5] = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger, OVRInput.Controller.Active);
+                        if (OVRInput.Get(OVRInput.RawButton.DpadLeft, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[6] -= 1f;
+                        }
+                        if (OVRInput.Get(OVRInput.RawButton.DpadRight, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[6] += 1f;
+                        }
+                        GameInput.axisValues[7] = 0f;
+                        if (OVRInput.Get(OVRInput.RawButton.DpadUp, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[7] += 1f;
+                        }
+                        if (OVRInput.Get(OVRInput.RawButton.DpadDown, OVRInput.Controller.Active))
+                        {
+                            GameInput.axisValues[7] -= 1f;
+                        }
+                    }
+                    else
+                    {*/
+                        Vector2 vector = xrInput.Get(Controller.Left, CommonUsages.primary2DAxis);
+                        GameInput.axisValues[2] = vector.x;
+                        GameInput.axisValues[3] = -vector.y;
+                        Vector2 vector2 = xrInput.Get(Controller.Right, CommonUsages.primary2DAxis);
+                        GameInput.axisValues[0] = vector2.x;
+                        GameInput.axisValues[1] = -vector2.y;
+                        // TODO: Use deadzone?
+                        GameInput.axisValues[4] = xrInput.Get(Controller.Left, CommonUsages.trigger).CompareTo(0.3f);
+                        GameInput.axisValues[5] = xrInput.Get(Controller.Right, CommonUsages.trigger).CompareTo(0.3f);
+
+                        //These axis I'm sure are used for something on other headsets
+                        //axisValues[6] = xrInput.Get(Controller.Left, CommonUsages.secondary2DAxisTouch).CompareTo(0.1f);
+                        //axisValues[7] = xrInput.Get(Controller.Right, CommonUsages.secondaryTouch).CompareTo(0.1f);
+                  //  }
+                }
+            
+            
+                if (useController && !VRCustomOptionsMenu.UseVrControllerSticks)
+                {
                     if (GameInput.GetUseOculusInputManager())
                     {
                         Vector2 vector = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick, OVRInput.Controller.Active);
@@ -243,7 +293,7 @@ namespace VRTweaks
                         }
                     }
                 }
-                if (useKeyboard)
+                if (useKeyboard && !VRCustomOptionsMenu.UseVrControllerSticks)
                 {
                     GameInput.axisValues[10] = Input.GetAxis("Mouse ScrollWheel");
                     GameInput.axisValues[8] = Input.GetAxisRaw("Mouse X");

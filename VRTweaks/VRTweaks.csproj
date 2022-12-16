@@ -132,6 +132,7 @@
     <Compile Include="GamepadGazeCursorFixer\PDAMenu.cs" />
     <Compile Include="GamepadGazeCursorFixer\Utilities\RaycastFixer.cs" />
     <Compile Include="GazeLayerFix.cs" />
+    <Compile Include="MenuSliderPatches.cs" />
     <Compile Include="MiscVrOptions.cs" />
     <Compile Include="PDAPositioning.cs" />
     <Compile Include="VolumeCloudPatches.cs" />
